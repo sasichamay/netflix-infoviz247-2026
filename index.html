@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Netflix's Global Pivot — An Information Visualization project exploring how South Korea is dominating genres on Netflix." />
+  <title>Netflix's Global Pivot</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&family=Urbanist:ital,opsz,wght@0,400..900;1,400..900&family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&display=swap"
+    rel="stylesheet"
+  />
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- ===========================
+       LANDING / HERO SECTION
+       =========================== -->
+  <section class="landing" id="landing">
+    <!-- Background image + gradient overlays -->
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-gradient-bottom" aria-hidden="true"></div>
+    <div class="hero-gradient-left" aria-hidden="true"></div>
+    <div class="hero-vignette" aria-hidden="true"></div>
+
+    <!-- ===========================
+         NAVBAR
+         =========================== -->
+    <header class="navbar">
+      <div class="nav-left">
+        <a href="#landing" class="logo-wrap" aria-label="Home">
+          <span class="logo-n" aria-hidden="true">N</span>
+          <span class="brand-title">Netflix's Global Pivot</span>
+        </a>
+      </div>
+
+      <nav class="nav-center" aria-label="Primary">
+        <a href="#landing" class="nav-link active">Home</a>
+        <a href="#soft-power-intro" class="nav-link">Exploration</a>
+        <a
+          href="https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies/data?select=titles.csv"
+          class="nav-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >About data</a>
+      </nav>
+
+      <div class="nav-right">
+        <button class="icon-btn" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </button>
+
+        <button class="icon-btn" aria-label="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+          </svg>
+          <span class="notif-dot" aria-hidden="true"></span>
+        </button>
+
+        <a href="#site-footer" class="profile-avatar creator-pill" aria-label="Meet the creators">
+          <span class="creator-pill-text">CREATOR</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- ===========================
+         HERO CONTENT (CENTERED)
+         =========================== -->
+    <div class="hero-content">
+      <div class="hero-eyebrow reveal" data-delay="0">
+        <span class="eyebrow-badge">N</span>
+        <span class="eyebrow-text">VISUALIZATION PROJECT</span>
+      </div>
+
+      <h1 class="hero-title reveal" data-delay="120">
+        NETFLIX&rsquo;s <span class="title-accent"><br>Global Pivot</span>
+      </h1>
+
+      <p class="hero-description reveal" data-delay="320">
+        The motivation for this exploratory data analysis stems from a desire to understand the shifting landscape of global media power.  
+        <br>
+  
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="hero-buttons reveal" data-delay="440">
+        <a class="btn btn-primary" href="#soft-power-intro">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          <span>Exploration</span>
+        </a>
+
+        <a
+          class="btn btn-secondary"
+          href="https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies/data?select=titles.csv"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="About the dataset on Kaggle (opens in new tab)"
+        >
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="16" x2="12" y2="12" />
+            <line x1="12" y1="8" x2="12.01" y2="8" />
+          </svg>
+          <span>About data</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Scroll-down hint -->
+    <a href="#soft-power-intro" class="scroll-indicator reveal" data-delay="700" aria-label="Scroll to exploration">
+      <span class="scroll-text">Scroll to explore</span>
+      <span class="scroll-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19" />
+          <polyline points="19 12 12 19 5 12" />
+        </svg>
+      </span>
+    </a>
+  </section>
+
+  <!-- ===========================
+       QUESTION SECTION
+       =========================== -->
+  <section class="question-section" id="soft-power-intro" aria-label="Guiding question">
+    <div class="question-inner">
+      <p class="question-tag">QUESTION</p>
+      <p class="question-lead">
+        Hits like Squid Game (Korea) and Money Heist (Spain) made us wonder:
+      </p>
+      <h3 class="question-title">
+        Is Hollywood still the leader,or has Soft Power shifted to other countries?
+      </h3>
+      <p class="question-note">let's find out...</p>
+    </div>
+  </section>
+
+  <!-- ===========================
+       SCROLLYTELLING SECTION
+       =========================== -->
+  <section class="scrollytelling" id="exploration" aria-label="The 2015 Flood Scrollytelling">
+    <div class="scrolly-shell scrolly-shell--flood">
+      <div class="flood-combined" aria-labelledby="flood-section-heading">
+        <div class="flood-stack">
+          <header class="flood-lede">
+            <div class="flood-lede-accent">
+              <h2 class="flood-section-heading" id="flood-section-heading">
+                The 2015 Flood: Quantity vs. Quality
+              </h2>
+              <p class="flood-subhead">
+                Netflix&rsquo;s global expansion led to a massive spike in content, but more doesn&rsquo;t always mean better.
+              </p>
+            </div>
+          </header>
+
+          <div class="flood-visual-column">
+            <div class="flood-dual-viz" id="flood-dual-viz">
+              <div id="flood-viz-wrapper" class="flood-viz-wrapper">
+                <div id="flood-year-display" class="flood-year-display" aria-live="polite">2015</div>
+
+                <div class="flood-chart-block" id="flood-count-block">
+                  <div class="flood-chart-title">Content Volume Trend</div>
+                  <div id="flood-count-chart" class="flood-chart-root"></div>
+                </div>
+
+                <div class="flood-chart-block" id="flood-score-block">
+                  <div class="flood-chart-title">Average Quality Trend</div>
+                  <div id="flood-score-chart" class="flood-chart-root"></div>
+                </div>
+
+                <div class="flood-slider-section">
+                  <label class="visually-hidden" for="flood-year-slider">Explore by release year</label>
+                  <input type="range" id="flood-year-slider" />
+                  <p class="flood-slider-hint">Drag across charts or slider to explore</p>
+                </div>
+              </div>
+
+              <div id="flood-tooltip" class="tooltip flood-tooltip" role="tooltip"></div>
+            </div>
+          </div>
+
+          <div class="flood-body-block">
+            <p class="flood-body">
+              As Netflix aggressively expanded its library to meet global demand, the production volume skyrocketed starting in 2015. While this &lsquo;flood&rsquo; of content gave subscribers more choice than ever, the Median IMDb Score began a steady decline. The data reveals a clear trade-off: in the race for global dominance, maintaining consistent quality across thousands of new titles became the ultimate challenge.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="scrolly-list">
+        <article class="scrolly-step">
+          <div class="step-card">
+            <p class="step-kicker">Insight</p>
+            <p class="step-copy">
+              While US volume is huge, its market share is slowly shrinking as
+              other countries start to produce more.
+            </p>
+            <p class="step-sub">
+              The global content landscape is becoming increasingly diverse, with
+              countries like South Korea, Spain, and France gaining momentum.
+            </p>
+          </div>
+          <div
+            class="scrolly-visual"
+            id="chart-3"
+            data-visual="3"
+            role="region"
+            aria-label="Interactive chart: global content market share insight"
+          >
+            <div class="flourish-chart-host">
+              <div class="flourish-embed flourish-chart" data-src="visualisation/28748494">
+                <script src="https://public.flourish.studio/resources/embed.js"></script>
+                <noscript>
+                  <img
+                    src="https://public.flourish.studio/visualisation/28748494/thumbnail"
+                    width="100%"
+                    alt="Chart visualization"
+                  />
+                </noscript>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===========================
+       STACKING POLL CARDS
+       Poll #1 (and its reveal) is sticky.
+       Poll #2 (and its reveal) slides up and stacks over it.
+       =========================== -->
+  <div class="poll-stack">
+
+  <!-- ── Card 1: pinned/sticky ── -->
+  <div class="poll-stack-pinned">
+
+  <!-- ===========================
+       QUIZ SECTION
+       =========================== -->
+  <section class="quiz-section" id="quiz" aria-label="Quick poll" data-quiz-correct="Shows">
+    <div class="quiz-inner">
+      <p class="quiz-eyebrow">QUICK POLL</p>
+      <h2 class="quiz-question">
+        Which format do you think Netflix viewers
+        <span class="quiz-question-accent">rate higher?</span>
+      </h2>
+
+      <div class="quiz-options" role="group" aria-label="Choose a format">
+        <button
+          type="button"
+          class="quiz-option"
+          id="quiz-1-movies"
+          data-quiz-choice="Movies"
+          data-quiz-target="reveal"
+          data-quiz-feedback="quiz-feedback"
+        >
+          <span class="quiz-option-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <path d="M3 9h18M3 15h18M7 5v14M17 5v14" />
+            </svg>
+          </span>
+          <span class="quiz-option-label">Movies</span>
+        </button>
+
+        <span class="quiz-vs" aria-hidden="true">vs</span>
+
+        <button
+          type="button"
+          class="quiz-option"
+          id="quiz-1-shows"
+          data-quiz-choice="Shows"
+          data-quiz-target="reveal"
+          data-quiz-feedback="quiz-feedback"
+        >
+          <span class="quiz-option-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="13" rx="2" />
+              <path d="M8 21h8M12 17v4" />
+            </svg>
+          </span>
+          <span class="quiz-option-label">Shows</span>
+        </button>
+      </div>
+
+      <p class="quiz-feedback" id="quiz-feedback" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- ===========================
+       REVEAL SECTION
+       =========================== -->
+  <section class="reveal-section" id="reveal" aria-label="Reveal">
+    <div class="reveal-inner">
+      <p class="reveal-eyebrow">THE ANSWER</p>
+      <h2 class="reveal-title">
+        TV Shows often maintain higher engagement
+        <br />
+        and satisfaction levels.
+      </h2>
+      <p class="reveal-sub">
+        Boxplot of viewer scores — Hover on the box to see details.
+      </p>
+
+      <div
+        class="reveal-chart reveal-chart--boxplot"
+        id="reveal-chart"
+        aria-label="Movie versus TV show IMDb score distribution (box plot)"
+      >
+        <div id="boxplot-container" class="boxplot-container">
+          <div class="boxplot-chart-title">Global Score Distribution: Movie vs Show</div>
+          <div id="boxplot" class="boxplot-root"></div>
+          <div id="boxplot-tooltip" class="boxplot-tooltip" role="tooltip"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </div><!-- /.poll-stack-pinned -->
+
+  <!-- ── Card 2: overlay that stacks over Card 1 ── -->
+  <div class="poll-stack-overlay">
+
+  <!-- ===========================
+       QUIZ SECTION #2
+       =========================== -->
+  <section class="quiz-section" id="quiz-2" aria-label="Quick poll #2" data-quiz-correct="Movies">
+    <div class="quiz-inner">
+      <p class="quiz-eyebrow">QUICK POLL · 02</p>
+      <h2 class="quiz-question">
+        Which format do you think dominates the Netflix library
+        <span class="quiz-question-accent">in terms of volume?</span>
+      </h2>
+
+      <div class="quiz-options" role="group" aria-label="Choose a format">
+        <button
+          type="button"
+          class="quiz-option"
+          id="quiz-2-movies"
+          data-quiz-choice="Movies"
+          data-quiz-target="reveal-2"
+          data-quiz-feedback="quiz-2-feedback"
+        >
+          <span class="quiz-option-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <path d="M3 9h18M3 15h18M7 5v14M17 5v14" />
+            </svg>
+          </span>
+          <span class="quiz-option-label">Movies</span>
+        </button>
+
+        <span class="quiz-vs" aria-hidden="true">vs</span>
+
+        <button
+          type="button"
+          class="quiz-option"
+          id="quiz-2-shows"
+          data-quiz-choice="Shows"
+          data-quiz-target="reveal-2"
+          data-quiz-feedback="quiz-2-feedback"
+        >
+          <span class="quiz-option-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="13" rx="2" />
+              <path d="M8 21h8M12 17v4" />
+            </svg>
+          </span>
+          <span class="quiz-option-label">Shows</span>
+        </button>
+      </div>
+
+      <p class="quiz-feedback" id="quiz-2-feedback" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- ===========================
+       REVEAL SECTION #2
+       =========================== -->
+  <section class="reveal-section" id="reveal-2" aria-label="Reveal #2">
+    <div class="reveal-inner">
+      <p class="reveal-eyebrow">THE ANSWER · 02</p>
+      <h2 class="reveal-title">
+        Movies still dominate the library in sheer volume, but TV Shows are the true engagement leaders.
+        
+      
+      </h2>
+      <p class="reveal-sub">
+        Annual production volume — Movies vs TV Shows.
+      </p>
+
+      <div
+        class="reveal-chart reveal-chart--volume"
+        id="reveal-chart-2"
+        aria-label="Qualified content volume: Movies versus TV shows"
+      >
+        <div id="volume-bar-container" class="volume-bar-container">
+          <div class="volume-bar-title">Qualified Content Volume</div>
+          <p class="volume-bar-subtitle">
+            Distinct titles with valid IMDb scores (matches box plot N)
+          </p>
+          <div id="volume-bar-root" class="volume-bar-root"></div>
+        </div>
+      </div>
+
+      <p class="reveal-note">
+        <strong>Note:</strong> This count represents individual titles. However,
+        the &ldquo;volume&rdquo; of content for TV Shows is significantly higher when
+        factoring in multiple episodes and seasons per title.
+      </p>
+    </div>
+  </section>
+
+  </div><!-- /.poll-stack-overlay -->
+  </div><!-- /.poll-stack -->
+
+  <!-- ===========================
+       DEEP DIVE SECTION
+       =========================== -->
+  <section class="deepdive-section" id="deep-dive" aria-label="Deep Dive: Global content production">
+    <div class="deepdive-shell">
+
+      <!-- Section header -->
+      <header class="deepdive-header">
+        <p class="deepdive-eyebrow">DEEP DIVE</p>
+        <h2 class="deepdive-title">
+          The Global Shift in <span class="deepdive-title-accent">Content Production</span>
+        </h2>
+        <p class="deepdive-subtitle">
+          At first glance, Movies still dominate the total library volume. However, a closer
+          look at the growth patterns reveals a significant divergence. While Movies maintain
+          a steady presence, TV Shows are experiencing a localized surge that is reshaping
+          Netflix&rsquo;s global strategy.
+        </p>
+        <p class="deepdive-narrative">
+          This isn&rsquo;t just a domestic trend. In the sections following, we will zoom into
+          key markets like the UK, France, and South Korea, where the production of episodic
+          content is not just growing&mdash;it&rsquo;s gaining massive momentum, redefining what
+          <em>&lsquo;Global Content&rsquo;</em> truly means.
+        </p>
+      </header>
+
+      <!-- ── Container 1: Format Growth Comparison ── -->
+      <div class="deepdive-block" id="block-growth-rate">
+        <div class="deepdive-block-header">
+          <span class="deepdive-block-tag">01 · FORMAT COMPARISON</span>
+          <h3 class="deepdive-block-title">Movies vs. TV Shows — Growth Rate</h3>
+          <p class="deepdive-block-desc">
+            The chart below plots the year-over-year growth rate of new titles
+            added to Netflix. TV Shows are outpacing Movies in rate of increase,
+            even as Movies retain a larger absolute count.
+          </p>
+        </div>
+        <div class="deepdive-chart-wrap">
+          <div
+            class="deepdive-chart deepdive-chart--comparison"
+            id="chart-global-growth-rate"
+            aria-label="Compare movie versus TV show title volume by year"
+          >
+            <div class="content-pivot-heading">
+              <h2 class="content-pivot-title">THE CONTENT PIVOT</h2>
+              <p class="content-pivot-subtitle">
+                Slide to compare Movie (Red) vs. Show (White) Volume
+              </p>
+            </div>
+            <div
+              id="content-pivot-comparison"
+              class="content-pivot-comparison"
+              role="presentation"
+            >
+              <div class="content-pivot-label content-pivot-label--movie" aria-hidden="true">
+                Movie perspective
+              </div>
+              <div class="content-pivot-label content-pivot-label--show" aria-hidden="true">
+                Show perspective
+              </div>
+              <div id="content-pivot-movie-layer" class="content-pivot-layer"></div>
+              <div
+                id="content-pivot-show-layer"
+                class="content-pivot-layer content-pivot-show-layer"
+              ></div>
+              <div
+                id="content-pivot-slider-handle"
+                class="content-pivot-slider-handle"
+                role="slider"
+                aria-label="Reveal comparison"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="50"
+                tabindex="0"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Container 2: The International Wave ── -->
+      <div class="deepdive-block deepdive-block--zoom" id="block-international">
+        <div class="deepdive-zoom-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="7" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            <line x1="11" y1="8" x2="11" y2="14" /><line x1="8" y1="11" x2="14" y2="11" />
+          </svg>
+          ZOOM IN
+        </div>
+
+        <div class="deepdive-block-header">
+          <span class="deepdive-block-tag">02 · INTERNATIONAL WAVE</span>
+          <h3 class="deepdive-block-title">Production Growth by Country</h3>
+          <p class="deepdive-block-desc">
+            While Movies still lead in total global volume, zooming into specific markets reveals a startling shift in strategy. Use the selectors below to explore different regions: you'll notice that in hubs like Japan and South Korea, TV Shows have not only closed the gap but are now significantly outpacing Movie production. This data underscores a localized pivot toward episodic storytelling that is redefining the Netflix library for international audiences.
+          </p>
+        </div>
+
+        <div class="deepdive-chart-wrap deepdive-chart-wrap--wide">
+          <div
+            class="deepdive-chart deepdive-chart--international"
+            id="chart-international-trends"
+            aria-label="Annual movie and TV show production by country and year"
+          >
+            <div id="intl-viz-wrapper" class="intl-viz-wrapper">
+              <div class="intl-controls-header">
+                <div class="intl-year-block">
+                  <div class="intl-controls-eyebrow">Annual production</div>
+                  <div id="intl-year-display" class="intl-year-display" aria-live="polite">2015</div>
+                </div>
+                <div class="intl-region-block" role="group" aria-label="Select country">
+                  <div class="intl-country-capsules" id="intl-country-capsules">
+                    <button type="button" class="intl-capsule intl-capsule--active" data-country="US" aria-pressed="true">
+                      US
+                    </button>
+                    <button type="button" class="intl-capsule" data-country="IN" aria-pressed="false">
+                      India
+                    </button>
+                    <button type="button" class="intl-capsule" data-country="GB" aria-pressed="false">
+                      UK
+                    </button>
+                    <button type="button" class="intl-capsule" data-country="JP" aria-pressed="false">
+                      Japan
+                    </button>
+                    <button type="button" class="intl-capsule" data-country="FR" aria-pressed="false">
+                      France
+                    </button>
+                    <button type="button" class="intl-capsule" data-country="KR" aria-pressed="false">
+                      Korea
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="intl-legend" aria-hidden="true">
+                <div class="intl-legend-item">
+                  <span class="intl-legend-swatch intl-legend-swatch--movie" aria-hidden="true"></span>
+                  Movies
+                </div>
+                <div class="intl-legend-item">
+                  <span class="intl-legend-swatch intl-legend-swatch--show" aria-hidden="true"></span>
+                  Shows
+                </div>
+              </div>
+
+              <div id="intl-chart-container" class="intl-chart-container"></div>
+
+            </div>
+
+            <div id="intl-trends-tooltip" class="tooltip intl-trends-tooltip" role="tooltip"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===========================
+       GENRE DOMINANCE SECTION
+       =========================== -->
+  <div class="genre-dominance" id="genre-dominance">
+
+    <!-- 1 · Hook — sticky, fades out on scroll -->
+    <div class="genre-hook-outer" aria-hidden="false">
+      <div class="genre-hook">
+        <h2 class="genre-hook-title">
+          Let's see what is <span class="genre-hook-accent">#1 genre</span> content on Netflix
+        </h2>
+      </div>
+    </div>
+
+    <!-- 2 · Reveal — single-column stack: narrative on top, full-width chart below -->
+    <section class="genre-reveal" id="genre-reveal" aria-label="Genre Dominance: Drama">
+      <div class="genre-reveal-inner">
+
+        <!-- Top: Narrative (full-width, centered) -->
+        <div class="genre-reveal-narrative">
+          <p class="genre-reveal-eyebrow">GENRE DOMINANCE</p>
+          <h3 class="genre-reveal-headline">
+            Obviously, people love <span class="genre-headline-accent">Drama</span>
+          </h3>
+          <p class="genre-reveal-body">
+            Across all <strong>18 genre categories</strong> on Netflix, Drama appears in nearly
+            <strong>1 of every 2 titles</strong> &mdash; far outpacing every rival on the platform.
+          </p>
+          <p class="genre-reveal-body genre-reveal-body--muted">
+            Comedy holds a distant second at 38%, then the curve dives sharply: Thriller and Action
+            sit near 20%, while the long tail thins toward niche corners like War and Western at
+            under 3%.
+          </p>
+        </div>
+
+        <!-- Bottom: Animated bar chart, full width -->
+        <div class="genre-chart-wrap">
+          <figure
+            class="genre-bar-chart"
+            id="chart-genre-distribution"
+            aria-label="Vertical bar chart ranking all 18 Netflix genres by share of titles. Drama leads at 50%, followed by Comedy at 38%, with Western lowest at 2%."
+          >
+            <figcaption class="genre-bar-chart-head">
+              <p class="genre-bar-chart-eyebrow">CHART · NETFLIX LIBRARY (FULL TAXONOMY)</p>
+              <h4 class="genre-bar-chart-title">Genre Distribution Across All 18 Categories</h4>
+              <p class="genre-bar-chart-sub">% of Total Distinct count of ID &middot; Ranked highest to lowest &middot; July 2022</p>
+            </figcaption>
+
+            <div class="genre-bar-chart-body">
+              <!-- Y-axis labels -->
+              <ol class="genre-bar-yaxis" aria-hidden="true">
+                <li>50%</li>
+                <li>40%</li>
+                <li>30%</li>
+                <li>20%</li>
+                <li>10%</li>
+                <li>0%</li>
+              </ol>
+
+              <!-- Plot area -->
+              <div class="genre-bar-plot">
+                <div class="genre-bar-gridlines" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+
+                <ol class="genre-bars" role="list">
+                  <li class="genre-bar-col genre-bar-col--leader" data-genre="drama" data-rank="1" style="--target: 50">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">50%</span>
+                    </div>
+                    <span class="visually-hidden">Drama: 50%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="comedy" data-rank="2" style="--target: 38">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">38%</span>
+                    </div>
+                    <span class="visually-hidden">Comedy: 38%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="thriller" data-rank="3" style="--target: 21">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">21%</span>
+                    </div>
+                    <span class="visually-hidden">Thriller: 21%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="action" data-rank="4" style="--target: 20">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">20%</span>
+                    </div>
+                    <span class="visually-hidden">Action: 20%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="romance" data-rank="5" style="--target: 17">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">17%</span>
+                    </div>
+                    <span class="visually-hidden">Romance: 17%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="crime" data-rank="6" style="--target: 16">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">16%</span>
+                    </div>
+                    <span class="visually-hidden">Crime: 16%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="documentation" data-rank="7" style="--target: 15">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">15%</span>
+                    </div>
+                    <span class="visually-hidden">Documentation: 15%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="family" data-rank="8" style="--target: 11">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">11%</span>
+                    </div>
+                    <span class="visually-hidden">Family: 11%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="fantasy" data-rank="9" style="--target: 10.5">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">10.5%</span>
+                    </div>
+                    <span class="visually-hidden">Fantasy: 10.5%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="animation" data-rank="10" style="--target: 10.5">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">10.5%</span>
+                    </div>
+                    <span class="visually-hidden">Animation: 10.5%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="scifi" data-rank="11" style="--target: 9">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">9%</span>
+                    </div>
+                    <span class="visually-hidden">Sci-Fi: 9%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="european" data-rank="12" style="--target: 7.5">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">7.5%</span>
+                    </div>
+                    <span class="visually-hidden">European: 7.5%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="horror" data-rank="13" style="--target: 6.5">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">6.5%</span>
+                    </div>
+                    <span class="visually-hidden">Horror: 6.5%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="music" data-rank="14" style="--target: 5">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">5%</span>
+                    </div>
+                    <span class="visually-hidden">Music: 5%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="history" data-rank="15" style="--target: 4.5">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">4.5%</span>
+                    </div>
+                    <span class="visually-hidden">History: 4.5%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="reality" data-rank="16" style="--target: 4">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">4%</span>
+                    </div>
+                    <span class="visually-hidden">Reality: 4%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="war" data-rank="17" style="--target: 2.5">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">2.5%</span>
+                    </div>
+                    <span class="visually-hidden">War: 2.5%</span>
+                  </li>
+                  <li class="genre-bar-col" data-genre="western" data-rank="18" style="--target: 2">
+                    <div class="genre-bar-shape">
+                      <span class="genre-bar-value">2%</span>
+                    </div>
+                    <span class="visually-hidden">Western: 2%</span>
+                  </li>
+                </ol>
+              </div>
+
+              <!-- X-axis labels (rotated -45°) -->
+              <ol class="genre-bar-xaxis" aria-hidden="true">
+                <li class="is-leader"><span>Drama</span></li>
+                <li><span>Comedy</span></li>
+                <li><span>Thriller</span></li>
+                <li><span>Action</span></li>
+                <li><span>Romance</span></li>
+                <li><span>Crime</span></li>
+                <li><span>Documentation</span></li>
+                <li><span>Family</span></li>
+                <li><span>Fantasy</span></li>
+                <li><span>Animation</span></li>
+                <li><span>Sci-Fi</span></li>
+                <li><span>European</span></li>
+                <li><span>Horror</span></li>
+                <li><span>Music</span></li>
+                <li><span>History</span></li>
+                <li><span>Reality</span></li>
+                <li><span>War</span></li>
+                <li><span>Western</span></li>
+              </ol>
+            </div>
+
+            <p class="genre-bar-chart-axis-name">Genre &middot; ranked highest to lowest</p>
+          </figure>
+        </div>
+
+      </div>
+    </section>
+
+  </div><!-- /.genre-dominance -->
+
+  <!-- ===========================
+       SARANDOS QUOTE SECTION
+       =========================== -->
+  <section class="quote-section" id="sarandos-quote" aria-label="Ted Sarandos quote">
+    <div class="quote-bg-layer" aria-hidden="true"></div>
+    <div class="quote-inner">
+      <blockquote class="quote-block">
+        <p class="quote-text">
+          <span class="quote-mark quote-mark--open" aria-hidden="true">&ldquo;</span>Storytelling is the shortest distance between two people. Our goal is to connect the world through the power of drama.<span class="quote-mark quote-mark--close" aria-hidden="true">&rdquo;</span>
+        </p>
+        <footer class="quote-footer">
+          <cite class="quote-source">— Ted Sarandos, Co-CEO of Netflix</cite>
+        </footer>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ===========================
+       DATA EXPLORER SECTION
+       =========================== -->
+  <section class="explorer-section" id="data-explorer" aria-label="Interactive Data Explorer">
+    <div class="explorer-shell">
+
+      <!-- Header -->
+      <header class="explorer-header">
+        <p class="explorer-eyebrow">INTERACTIVE EXPLORER</p>
+        <h2 class="explorer-title">Decoding the <span class="explorer-title-accent">Global Library</span></h2>
+        <p class="explorer-subtitle">
+          Explore how production power shifts across genres and how each nation crafts its unique content identity.
+        </p>
+      </header>
+
+      <!-- Radio toggle controls -->
+      <div class="explorer-controls" role="group" aria-label="Choose a view">
+        <label class="explorer-pill">
+          <input
+            type="radio"
+            name="explorer-view"
+            value="market-share"
+            checked
+            aria-controls="view-market-share view-content-composition"
+          />
+          <span class="explorer-pill-label">Market Share of Production Countries per Genre</span>
+        </label>
+
+        <label class="explorer-pill">
+          <input
+            type="radio"
+            name="explorer-view"
+            value="content-composition"
+            aria-controls="view-market-share view-content-composition"
+          />
+          <span class="explorer-pill-label">Content Composition by Country (% of National Library)</span>
+        </label>
+      </div>
+
+      <!-- Dual-view container -->
+      <div class="explorer-views">
+
+        <!-- VIEW A: Market Share — D3 small multiples (Global Content Dominance) -->
+        <div class="explorer-view is-active" id="view-market-share" role="region" aria-label="Market Share view">
+          <div class="explorer-view-inner explorer-view-inner--stacked">
+            <div class="explorer-view-copy" id="desc-market-share">
+              <span class="deepdive-block-tag">03 · MARKET SHARE</span>
+              <h3 class="deepdive-block-title">Global Content Dominance</h3>
+              <p class="deepdive-block-desc">
+                Market Share by Genre &amp; Country: Percentage of total production per genre.
+              </p>
+            </div>
+            <div class="explorer-chart-wrap explorer-chart-wrap--stacked">
+              <figure
+                class="market-share-viz market-share-viz--facets"
+                id="chart-market-share"
+                aria-label="Market share by genre and country: share of titles with valid IMDb scores among top producing countries"
+              >
+                <p class="market-share-facets__status" id="market-share-facets-status" role="status" aria-live="polite">
+                  Loading chart…
+                </p>
+                <div
+                  class="market-share-facets__container"
+                  id="market-share-facets-container"
+                  role="img"
+                  aria-hidden="true"
+                ></div>
+                <div
+                  class="market-share-facets__tooltip"
+                  id="market-share-facets-tooltip"
+                  role="tooltip"
+                  hidden
+                ></div>
+              </figure>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW B: National Composition -->
+        <div class="explorer-view" id="view-content-composition" role="region" aria-label="National Composition view" hidden>
+          <div class="explorer-view-inner explorer-view-inner--stacked">
+            <div class="explorer-view-copy" id="desc-content-composition">
+              <span class="deepdive-block-tag">04 · NATIONAL LIBRARY</span>
+              <h3 class="deepdive-block-title">Content Composition by Country</h3>
+              <p class="deepdive-block-desc">
+                Every nation crafts its unique cinematic DNA. While some regions prioritize high-volume production of familiar staples, others lean into specialized expertise. Click a genre in the legend below to highlight its presence across the globe and see which nations dominate specific storytelling niches.
+              </p>
+            </div>
+            <div class="explorer-chart-wrap explorer-chart-wrap--stacked">
+              <div
+                class="explorer-chart explorer-chart--composition composition-chart"
+                id="chart-content-composition"
+                aria-label="Top five genres by share of each national Netflix library in the United States, India, Japan, South Korea, the United Kingdom, and France"
+              >
+                <p class="composition-chart__hint" id="composition-genre-hint">
+                  Select a genre to compare across countries
+                </p>
+                <div class="composition-chart__legend composition-chart__legend--genres" aria-hidden="true">
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="drama" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #e50914"></span>
+                    Drama
+                  </span>
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="comedy" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #a0cbe8"></span>
+                    Comedy
+                  </span>
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="action" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #ffbe7d"></span>
+                    Action
+                  </span>
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="thriller" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #f28e2b"></span>
+                    Thriller
+                  </span>
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="romance" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #8cd17d"></span>
+                    Romance
+                  </span>
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="animation" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #b6992d"></span>
+                    Animation
+                  </span>
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="documentation" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #4e79a7"></span>
+                    Documentation
+                  </span>
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="fantasy" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #f1ce63"></span>
+                    Fantasy
+                  </span>
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="sci-fi" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #86bcb6"></span>
+                    Sci-Fi
+                  </span>
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="european" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #ff9d9a"></span>
+                    European
+                  </span>
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="crime" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #59a14f"></span>
+                    Crime
+                  </span>
+                  <span class="composition-legend-item composition-legend-item--compact composition-legend-item--interactive" data-genre="family" role="presentation">
+                    <span class="composition-legend-swatch" style="background: #499894"></span>
+                    Family
+                  </span>
+                </div>
+                <div class="composition-chart__host" id="composition-stacked-host"></div>
+                <div class="composition-chart__tooltip" id="composition-stacked-tooltip" role="tooltip" hidden></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.explorer-views -->
+    </div><!-- /.explorer-shell -->
+  </section>
+
+  <!-- ===========================
+       TAROT DISCOVERY FINALE
+       =========================== -->
+  <section class="tarot-section" id="tarot-finale" aria-label="Tarot Discovery: Who Truly Rules the Genre?">
+    <div class="tarot-shell">
+
+      <!-- Narrative Hook -->
+      <header class="tarot-header">
+        <p class="tarot-eyebrow">THE FINALE</p>
+        <h2 class="tarot-title">Who Truly Rules<br /><span class="tarot-title-accent">the Genre?</span></h2>
+        <p class="tarot-subtitle">
+          We've seen who produces the most, but who produces the <em>best</em>? Audiences and critics have spoken through IMDb scores, revealing which nations have mastered specific genres — from the gritty realism of European crime to the high-stakes drama of Asia. Can you guess which country holds the highest critical acclaim for your chosen genre?
+        </p>
+        <p class="tarot-cta-text">Pick a card to reveal a top-rated nation.</p>
+      </header>
+
+      <!-- Tarot Card Game Container -->
+      <div class="tarot-game-wrap">
+        <div id="tarot-game-container" aria-label="Tarot flip-card game">
+          <section class="card-grid" id="cardGrid" aria-label="Genre flip cards">
+            <!-- Cards rendered dynamically by js/main.js -->
+          </section>
+        </div>
+      </div>
+
+      <!-- Data Benchmark — permanent IMDb heatmap right after the game -->
+      <div class="tarot-benchmark" id="regional-scores-heatmap">
+        <header class="tarot-benchmark-intro">
+          <p class="tarot-benchmark-eyebrow">DATA BENCHMARK</p>
+          <h3 class="tarot-benchmark-title">
+            Global Excellence: Comparing IMDb Scores by Region
+          </h3>
+        </header>
+
+        <div class="tarot-heatmap-chart tarot-heatmap-chart--data" id="chart-regional-heatmap" aria-label="Average IMDb scores by region and genre">
+          <header class="heatmap-header">
+            <p class="heatmap-chart-name">Regional Genre Specialization</p>
+            <div class="heatmap-legend" aria-hidden="true">
+              <span class="heatmap-legend-label">Avg. IMDb Score</span>
+              <div class="heatmap-legend-scale">
+                <span class="heatmap-legend-min">4.5</span>
+                <span class="heatmap-legend-bar"></span>
+                <span class="heatmap-legend-max">7.8</span>
+              </div>
+            </div>
+          </header>
+
+          <div class="heatmap-table-wrap">
+            <table class="heatmap-table" id="heatmap-table">
+              <caption class="visually-hidden">
+                Average IMDb score for each genre, broken down by country of origin.
+                Cell color intensity reflects the score, with brighter Netflix red
+                indicating higher critical acclaim. A trophy badge marks the top-rated
+                country for each genre.
+              </caption>
+              <colgroup>
+                <col class="heatmap-col-region" />
+                <col class="heatmap-col-genre" />
+                <col class="heatmap-col-genre" />
+                <col class="heatmap-col-genre" />
+                <col class="heatmap-col-genre" />
+                <col class="heatmap-col-genre" />
+                <col class="heatmap-col-genre" />
+                <col class="heatmap-col-genre" />
+                <col class="heatmap-col-genre" />
+                <col class="heatmap-col-genre" />
+                <col class="heatmap-col-genre" />
+              </colgroup>
+              <thead></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <p class="tarot-heatmap-caption">
+          <strong>Reading this chart:</strong> This heatmap benchmarks quality by displaying Average IMDb Scores across regions. While some nations dominate in volume, this view highlights where the "Critical Excellence" truly lies — the trophy <span aria-hidden="true">🏆</span> marks the top country for each genre.
+        </p>
+
+      </div><!-- /#regional-scores-heatmap -->
+
+    </div><!-- /.tarot-shell -->
+  </section>
+
+  <!-- ===========================
+       SITE FOOTER — MEET THE TEAM
+       =========================== -->
+  <footer class="site-footer" id="site-footer" role="contentinfo">
+    <div class="footer-inner">
+
+      <!-- Section eyebrow -->
+      <header class="footer-header">
+        <p class="footer-eyebrow">MEET THE TEAM</p>
+        <h2 class="footer-heading">The Creators</h2>
+      </header>
+
+      <!-- 2-column team grid -->
+      <div class="team-grid">
+
+        <!-- May -->
+        <article class="team-card">
+          <div class="team-avatar">
+            <img
+              src="https://media.licdn.com/dms/image/v2/D5603AQGhHdgWgpTb3A/profile-displayphoto-crop_800_800/B56Z2F5jUQHkAI-/0/1776067960519?e=1779321600&v=beta&t=XOQK3JN0RybXlNsLua37QMsd16SH2Kk0fXHM7Y5Mtb4"
+              alt="Sasicha (May) Thongkhaoaon"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+          <h3 class="team-name">Sasicha (May) Thongkhaoaon</h3>
+          <p class="team-role">Interaction Design &amp; Data Storytelling</p>
+          <p class="team-bio">Graduate student, Master of Design (MDes) at UC Berkeley.</p>
+          <a
+            class="team-link"
+            href="https://www.linkedin.com/in/maysasi/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Sasicha (May) Thongkhaoaon on LinkedIn"
+          >
+            <svg class="team-link-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19 0h-14c-2.762 0-5 2.238-5 5v14c0 2.762 2.238 5 5 5h14c2.762 0 5-2.238 5-5v-14c0-2.762-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+            </svg>
+            <span>Connect on LinkedIn</span>
+          </a>
+        </article>
+
+        <!-- Ruo-lin -->
+        <article class="team-card">
+          <div class="team-avatar">
+            <img
+              src="https://media.licdn.com/dms/image/v2/C4E03AQF67h41REPJkw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1604357813019?e=1779321600&v=beta&t=oQJ_g8S88jShLCBSt2E-NJRsEsrrTXGMqz9BY1y6uko"
+              alt="Ruo-lin Wang"
+              loading="lazy"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+          <h3 class="team-name">Ruo-lin Wang</h3>
+          <p class="team-role">Data Analysis &amp; Visualization</p>
+          <p class="team-bio">Graduate student, Master of Design (MDes) at UC Berkeley.</p>
+          <a
+            class="team-link"
+            href="https://www.linkedin.com/in/ruo-lin-wang-1420b9171/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Ruo-lin Wang on LinkedIn"
+          >
+            <svg class="team-link-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19 0h-14c-2.762 0-5 2.238-5 5v14c0 2.762 2.238 5 5 5h14c2.762 0 5-2.238 5-5v-14c0-2.762-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+            </svg>
+            <span>Connect on LinkedIn</span>
+          </a>
+        </article>
+
+      </div><!-- /.team-grid -->
+
+      <!-- Divider -->
+      <div class="footer-divider" aria-hidden="true"></div>
+
+      <!-- Academic credits -->
+      <div class="footer-academic">
+        <p class="footer-academic-line">
+          This project was developed for <strong>Information Visualization and Presentation</strong> (Spring 2026) at UC Berkeley.
+        </p>
+        <p class="footer-academic-line">
+          Instructed by <strong>Marti Hearst</strong> and <strong>Jasmine Shih</strong> (TA).
+        </p>
+        <p class="footer-copy">
+          &copy; 2026 &nbsp;|&nbsp; Master of Design, UC Berkeley
+        </p>
+      </div>
+
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
