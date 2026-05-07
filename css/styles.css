@@ -3137,10 +3137,13 @@ a { color: inherit; text-decoration: none; }
   box-sizing: border-box;
 }
 
-/* ---- Header (mirrors deepdive-header style) ---- */
+/* ---- Header — full width aligned with stacked chart column (red-accent offset) ---- */
 .explorer-header {
-  max-width: 780px;
+  width: 100%;
+  max-width: none;
   margin-bottom: 56px;
+  padding-left: 23px;
+  box-sizing: border-box;
 }
 
 .explorer-eyebrow {
@@ -3175,12 +3178,14 @@ a { color: inherit; text-decoration: none; }
   color: var(--text-muted);
 }
 
-/* ---- Pill radio controls ---- */
+/* ---- Pill radio controls — same inset as chart for alignment with header ---- */
 .explorer-controls {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 48px;
+  padding-left: 23px;
+  box-sizing: border-box;
 }
 
 /* Hide the native radio input but keep it accessible */
@@ -3190,6 +3195,23 @@ a { color: inherit; text-decoration: none; }
   width: 0;
   height: 0;
   pointer-events: none;
+}
+
+@keyframes subtleGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(229, 9, 20, 0.1);
+    border-color: #333;
+  }
+
+  50% {
+    box-shadow: 0 0 15px rgba(229, 9, 20, 0.4);
+    border-color: #666;
+  }
+
+  100% {
+    box-shadow: 0 0 5px rgba(229, 9, 20, 0.1);
+    border-color: #333;
+  }
 }
 
 .explorer-pill {
@@ -3212,26 +3234,54 @@ a { color: inherit; text-decoration: none; }
   transition:
     background 0.25s var(--ease-out),
     border-color 0.25s var(--ease-out),
-    color 0.25s var(--ease-out);
+    color 0.25s var(--ease-out),
+    box-shadow 0.2s ease;
 }
 
-/* Active / checked state */
+/* Unchecked pills: breathing glow */
+.explorer-pill input[type="radio"]:not(:checked) + .explorer-pill-label {
+  animation: subtleGlow 3s infinite ease-in-out;
+}
+
+/* Checked — no pulse, solid Netflix red */
 .explorer-pill input[type="radio"]:checked + .explorer-pill-label {
+  animation: none;
+  box-shadow: none;
   background: var(--netflix-red);
   border-color: var(--netflix-red);
   color: #ffffff;
 }
 
-/* Hover on inactive pills */
-.explorer-pill:hover .explorer-pill-label {
-  border-color: var(--white-40);
+/* Hover: unchecked — stop pulse, instant red border, stronger glow */
+.explorer-pill:hover input[type="radio"]:not(:checked) + .explorer-pill-label {
+  animation: none;
+  border-color: var(--netflix-red);
+  box-shadow: 0 0 22px rgba(229, 9, 20, 0.55);
   color: var(--text);
+  transition:
+    border-color 0s,
+    box-shadow 0.2s ease,
+    color 0.25s var(--ease-out),
+    background 0.25s var(--ease-out);
+}
+
+/* Hover: checked — stay red, light glow only */
+.explorer-pill:hover input[type="radio"]:checked + .explorer-pill-label {
+  border-color: var(--netflix-red);
+  box-shadow: 0 0 16px rgba(229, 9, 20, 0.35);
 }
 
 /* Focus-visible ring for keyboard users */
 .explorer-pill input[type="radio"]:focus-visible + .explorer-pill-label {
   outline: 2px solid var(--netflix-red);
   outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .explorer-pill input[type="radio"]:not(:checked) + .explorer-pill-label {
+    animation: none;
+    box-shadow: 0 0 10px rgba(229, 9, 20, 0.18);
+  }
 }
 
 /* ---- View container ---- */
@@ -3376,6 +3426,33 @@ a { color: inherit; text-decoration: none; }
   justify-content: center;
 }
 
+@keyframes composition-legend-glow-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(229, 9, 20, 0.12);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(229, 9, 20, 0.38);
+  }
+}
+
+.composition-chart__legend--pulse {
+  border-radius: 10px;
+  padding: 12px 14px 10px;
+  margin-bottom: 22px;
+  margin-top: 4px;
+  box-sizing: border-box;
+  animation: composition-legend-glow-pulse 3.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .composition-chart__legend--pulse {
+    animation: none;
+    box-shadow: 0 0 12px rgba(229, 9, 20, 0.22);
+  }
+}
+
 .composition-legend-item {
   display: inline-flex;
   align-items: center;
@@ -3505,9 +3582,6 @@ a { color: inherit; text-decoration: none; }
 }
 
 .market-share-facets__container {
-  display: flex;
-  flex-wrap: nowrap;
-  gap: 15px;
   width: 100%;
   max-width: none;
   box-sizing: border-box;
@@ -3517,6 +3591,61 @@ a { color: inherit; text-decoration: none; }
   -webkit-overflow-scrolling: touch;
   scrollbar-color: #333333 #111;
   scrollbar-width: thin;
+}
+
+.market-share-facets__track {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 15px;
+  min-width: min-content;
+}
+
+.market-share-facets-labels-col {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  flex: 0 0 auto;
+  width: var(--market-share-label-col-w, 168px);
+  max-width: 38%;
+  box-sizing: border-box;
+  padding-top: 10px;
+  padding-right: 8px;
+  background-color: #141414;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 12px 0 28px -6px rgba(0, 0, 0, 0.65);
+  align-self: flex-start;
+}
+
+.market-share-facets-labels-title-gap {
+  min-height: 44px;
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.market-share-facets-labels-rows {
+  position: relative;
+  box-sizing: border-box;
+}
+
+.market-share-facets-label-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 4px;
+  font-family: "Montserrat", "Urbanist", var(--font-sans);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: #b3b3b3;
+  pointer-events: none;
+  text-align: right;
 }
 
 .market-share-facets__container::-webkit-scrollbar {
@@ -3558,10 +3687,10 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.08em;
   line-height: 1.25;
   padding: 0 6px;
-}
-
-.market-share-facet__axis--hide-y-text .tick text {
-  display: none;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .market-share-facet__row {
@@ -3810,8 +3939,20 @@ a { color: inherit; text-decoration: none; }
   }
 
   .market-share-facets__container {
-    gap: 12px;
     padding-bottom: 14px;
+  }
+
+  .market-share-facets__track {
+    gap: 12px;
+  }
+
+  .market-share-facets-labels-col {
+    width: 132px;
+    max-width: 34%;
+  }
+
+  .market-share-facets-label-row {
+    font-size: 9px;
   }
 
   .ms-heatmap-header {
@@ -3901,7 +4042,7 @@ a { color: inherit; text-decoration: none; }
    ============================================================ */
 .tarot-section {
   background-color: var(--bg);
-  padding: 100px 0 120px;
+  padding: 100px 0 88px;
 }
 
 .tarot-shell {
@@ -4167,13 +4308,13 @@ a { color: inherit; text-decoration: none; }
 /* ---- Responsive ---- */
 @media (max-width: 900px) {
   .tarot-shell { padding: 0 24px; }
-  .tarot-section { padding: 72px 0 90px; }
+  .tarot-section { padding: 72px 0 72px; }
   .tarot-header { margin-bottom: 48px; }
 }
 
 @media (max-width: 600px) {
   .tarot-shell { padding: 0 16px; }
-  .tarot-section { padding: 56px 0 72px; }
+  .tarot-section { padding: 56px 0 60px; }
   #tarot-game-container { min-height: 400px; padding: 28px 18px; }
   .tarot-heatmap-chart { min-height: 400px; }
   .tarot-ghost-btn { font-size: 13px; padding: 12px 24px; }
@@ -4385,7 +4526,7 @@ a { color: inherit; text-decoration: none; }
 .site-footer {
   background-color: var(--bg);
   border-top: 1px solid #333333;
-  padding: 100px 40px 90px;
+  padding: 88px 40px 90px;
   color: var(--text-muted);
 }
 

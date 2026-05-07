@@ -331,6 +331,44 @@
         tooltip.style.top = `${Math.max(8, y)}px`;
       };
 
+      const COUNTRY_DISPLAY = {
+        US: 'United States',
+        GB: 'United Kingdom',
+        IN: 'India',
+        JP: 'Japan',
+        KR: 'South Korea',
+        FR: 'France',
+        CA: 'Canada',
+        DE: 'Germany',
+        ES: 'Spain',
+        MX: 'Mexico',
+        BR: 'Brazil',
+        AU: 'Australia',
+        IT: 'Italy',
+        CN: 'China',
+        NL: 'Netherlands',
+        SE: 'Sweden',
+        NO: 'Norway',
+        TR: 'Turkey',
+        PL: 'Poland',
+        AR: 'Argentina',
+        BE: 'Belgium',
+        CH: 'Switzerland',
+        AT: 'Austria',
+        PT: 'Portugal',
+        RU: 'Russia',
+        IE: 'Ireland',
+        NZ: 'New Zealand',
+        ZA: 'South Africa',
+        EG: 'Egypt',
+        NG: 'Nigeria',
+        RO: 'Romania',
+        CZ: 'Czech Republic',
+      };
+
+      const countryDisplay = (code) =>
+        COUNTRY_DISPLAY[code] || String(code || '').trim() || 'Unknown';
+
       const renderChart = (rawData) => {
         container.innerHTML = '';
 
@@ -382,7 +420,7 @@
           });
         });
 
-        const margin = { top: 10, right: 10, bottom: 30, left: 40 };
+        const margin = { top: 10, right: 10, bottom: 30, left: 14 };
         const width = 150 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
 
@@ -391,11 +429,28 @@
         const x = d3.scaleLinear().domain([0, 1]).range([0, width]);
 
         const containerSel = d3.select(container);
+        const track = containerSel.append('div').attr('class', 'market-share-facets__track');
 
-        topGenres.forEach((genre, i) => {
+        const labelsCol = track.append('div').attr('class', 'market-share-facets-labels-col');
+        labelsCol.append('div').attr('class', 'market-share-facets-labels-title-gap');
+
+        const labelsRows = labelsCol
+          .append('div')
+          .attr('class', 'market-share-facets-labels-rows')
+          .style('height', `${margin.top + height}px`);
+
+        topCountries.forEach((country) => {
+          labelsRows
+            .append('div')
+            .attr('class', 'market-share-facets-label-row')
+            .style('top', `${margin.top + y(country) + y.bandwidth() / 2}px`)
+            .text(countryDisplay(country));
+        });
+
+        topGenres.forEach((genre) => {
           const genreData = shareData.filter((d) => d.genre === genre);
 
-          const facet = containerSel.append('div').attr('class', 'market-share-facet');
+          const facet = track.append('div').attr('class', 'market-share-facet');
 
           facet
             .append('div')
@@ -407,7 +462,7 @@
             .attr('width', width + margin.left + margin.right)
             .attr('height', height + margin.top + margin.bottom)
             .append('g')
-            .attr('transform', `translate(${i === 0 ? margin.left : 10},${margin.top})`);
+            .attr('transform', `translate(${margin.left},${margin.top})`);
 
           svg
             .append('g')
@@ -429,24 +484,6 @@
                 .attr('font-size', 10)
                 .attr('font-family', FONT_STACK)
             );
-
-          const yAxisGroup = svg
-            .append('g')
-            .attr('class', 'market-share-facet__axis market-share-facet__axis--y')
-            .call(d3.axisLeft(y).tickSize(0).tickSizeOuter(0));
-
-          yAxisGroup.call((g) => g.select('.domain').attr('stroke', 'rgba(255,255,255,0.18)'));
-          yAxisGroup.call((g) =>
-            g
-              .selectAll('.tick text')
-              .attr('fill', '#B3B3B3')
-              .attr('font-size', 10)
-              .attr('font-family', FONT_STACK)
-          );
-
-          if (i > 0) {
-            yAxisGroup.classed('market-share-facet__axis--hide-y-text', true);
-          }
 
           const row = svg
             .selectAll('.market-share-facet__row')
@@ -479,9 +516,10 @@
             .attr('fill', 'transparent')
             .style('cursor', 'pointer')
             .on('mouseenter', (event, d) => {
+              const name = countryDisplay(d.country);
               tooltip.innerHTML = `
                 <div class="market-share-facets__tt-genre">${d.genre}</div>
-                <div class="market-share-facets__tt-main">${d.country}: ${(d.share * 100).toFixed(1)}%</div>
+                <div class="market-share-facets__tt-main">${name}: ${(d.share * 100).toFixed(1)}%</div>
                 <div class="market-share-facets__tt-detail">Titles: ${d.count} / ${d.total}</div>
               `;
               tooltip.hidden = false;
