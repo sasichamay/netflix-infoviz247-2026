@@ -604,8 +604,8 @@
 
     /* ---------------------------------------------------------
        8. Interactive Data Explorer — radio pill toggle
-          Switches between VIEW A (market-share) and VIEW B
-          (content-composition) with a smooth fade + lift.
+          Switches between VIEW A (content-composition, default) and
+          VIEW B (market-share) with a smooth fade + lift.
        --------------------------------------------------------- */
     const explorerRadios = document.querySelectorAll('input[name="explorer-view"]');
     const explorerViews  = document.querySelectorAll('.explorer-view');
@@ -646,6 +646,11 @@
           if (radio.checked) switchView(radio.value);
         });
       });
+
+      const checkedExplorer = document.querySelector('input[name="explorer-view"]:checked');
+      if (checkedExplorer) {
+        switchView(checkedExplorer.value);
+      }
     }
 
     /* ---------------------------------------------------------
@@ -771,7 +776,9 @@
 
       const genreToKey = (genre) => String(genre).trim().toLowerCase();
 
-      let compositionLockedGenre = null;
+      const COMPOSITION_DEFAULT_GENRE = 'drama';
+
+      let compositionLockedGenre = COMPOSITION_DEFAULT_GENRE;
       let compositionHoverGenre = null;
       let compositionBarListenerAbort = null;
       let compositionGenreHintDismissed = false;
@@ -814,6 +821,7 @@
         root.querySelectorAll('.composition-legend-item--interactive[data-genre]').forEach((el) => {
           const k = el.getAttribute('data-genre');
           if (!k) return;
+          el.classList.toggle('is-genre-active', Boolean(compositionLockedGenre && k === compositionLockedGenre));
           if (compositionLockedGenre) {
             if (k === compositionLockedGenre) {
               el.style.opacity = '1';
@@ -841,7 +849,8 @@
           if (e.target.closest('.composition-legend-item--interactive[data-genre]')) return;
           if (e.target.closest('.composition-genre-bar')) return;
           if (e.target.closest('.composition-chart__hint')) return;
-          compositionLockedGenre = null;
+          if (e.target.closest('.composition-chart-footnote')) return;
+          compositionLockedGenre = COMPOSITION_DEFAULT_GENRE;
           compositionHoverGenre = null;
           applyCompositionGenreFocus();
         });
@@ -851,9 +860,8 @@
             e.stopPropagation();
             const k = item.getAttribute('data-genre');
             compositionHoverGenre = null;
-            const next = compositionLockedGenre === k ? null : k;
-            compositionLockedGenre = next;
-            if (compositionLockedGenre !== null) dismissCompositionGenreHint();
+            compositionLockedGenre = k || COMPOSITION_DEFAULT_GENRE;
+            dismissCompositionGenreHint();
             applyCompositionGenreFocus();
           });
           item.addEventListener('mouseenter', () => {
@@ -881,9 +889,8 @@
             (e) => {
               e.stopPropagation();
               compositionHoverGenre = null;
-              const next = compositionLockedGenre === k ? null : k;
-              compositionLockedGenre = next;
-              if (compositionLockedGenre !== null) dismissCompositionGenreHint();
+              compositionLockedGenre = k || COMPOSITION_DEFAULT_GENRE;
+              dismissCompositionGenreHint();
               applyCompositionGenreFocus();
             },
             { signal }
@@ -1158,6 +1165,7 @@
         }
       });
 
+      dismissCompositionGenreHint();
       wireCompositionLegendInteractions();
       applyCompositionGenreFocus();
     };
@@ -1194,16 +1202,16 @@
        accessible/full country name kept for aria + native tooltips.
        `null` in scores = no data (matches the empty BR/Action cell). */
     const heatmapRegions = [
-      { code: 'BR', display: 'Brazil', name: 'Brazil',         scores: [null,  6.450, 5.327, 6.300, 6.829, 6.270, 6.100, 5.940, 6.900, 6.520] },
-      { code: 'CA', display: 'Canada', name: 'Canada',         scores: [5.731, 5.933, 6.743, 5.917, 7.450, 6.500, 6.450, 5.133, 6.855, 5.738] },
-      { code: 'ES', display: 'Spain',  name: 'Spain',          scores: [5.820, 7.000, 5.889, 6.608, 7.027, 6.659, 4.883, 6.000, 6.225, 6.344] },
-      { code: 'FR', display: 'France', name: 'France',         scores: [6.064, 6.873, 6.324, 6.917, 6.844, 6.445, 5.900, 5.750, 6.133, 6.108] },
-      { code: 'GB', display: 'UK',     name: 'United Kingdom', scores: [6.147, 6.950, 7.084, 6.792, 7.198, 7.010, 6.909, 6.400, 5.755, 6.535] },
-      { code: 'IN', display: 'India',  name: 'India',          scores: [6.202, 6.664, 6.122, 6.892, 7.078, 6.669, 4.500, 6.352, 6.450, 6.259] },
-      { code: 'JP', display: 'Japan',  name: 'Japan',          scores: [6.993, 7.245, 7.214, 6.925, 7.650, 6.835, 7.238, 6.600, 7.144, 6.180] },
-      { code: 'KR', display: 'Korea',  name: 'South Korea',    scores: [6.886, 6.211, 7.117, 7.638, 6.840, 7.611, 7.300, 7.800, 7.131, 6.871] },
-      { code: 'MX', display: 'Mexico', name: 'Mexico',         scores: [5.433, 7.500, 6.015, 7.450, 7.273, 6.510, 5.800, 6.150, 6.700, 7.000] },
-      { code: 'US', display: 'USA',    name: 'United States',  scores: [6.099, 6.275, 6.453, 6.896, 7.092, 6.775, 6.309, 5.957, 6.783, 6.050] }
+      { code: 'BR', display: 'Brazil', name: 'Brazil',         scores: [null,  6.450, 5.450, 6.200, 7.000, 6.600, 6.100, 6.200, 6.900, 6.300] },
+      { code: 'CA', display: 'Canada', name: 'Canada',         scores: [5.800, 5.500, 6.600, 6.450, 7.400, 6.600, 6.850, 5.200, 6.600, 5.700] },
+      { code: 'ES', display: 'Spain',  name: 'Spain',          scores: [5.700, 7.300, 5.800, 6.700, 7.250, 6.650, 4.900, 5.800, 6.250, 6.100] },
+      { code: 'FR', display: 'France', name: 'France',         scores: [6.000, 7.100, 6.300, 7.200, 6.900, 6.500, 6.850, 5.800, 6.450, 6.200] },
+      { code: 'GB', display: 'UK',     name: 'United Kingdom', scores: [6.100, 7.200, 7.100, 6.750, 7.200, 7.000, 7.000, 6.000, 5.400, 6.600] },
+      { code: 'IN', display: 'India',  name: 'India',          scores: [6.300, 7.300, 6.300, 7.200, 7.300, 7.000, 4.500, 6.550, 6.450, 6.300] },
+      { code: 'JP', display: 'Japan',  name: 'Japan',          scores: [7.050, 7.200, 7.200, 7.000, 7.650, 6.950, 7.250, 6.600, 7.300, 6.500] },
+      { code: 'KR', display: 'Korea',  name: 'South Korea',    scores: [6.850, 6.200, 7.200, 7.800, 6.500, 7.600, 7.300, 8.100, 7.100, 6.700] },
+      { code: 'MX', display: 'Mexico', name: 'Mexico',         scores: [6.400, 7.500, 6.200, 7.450, 7.200, 6.400, 5.800, 5.850, 6.700, 7.000] },
+      { code: 'US', display: 'USA',    name: 'United States',  scores: [6.100, 6.400, 6.500, 7.000, 7.200, 6.800, 6.400, 6.000, 6.750, 6.100] }
     ];
 
     /* Score → rgba() background. Discrete tiers (per design brief):
@@ -1240,19 +1248,20 @@
       };
     };
 
-    /* For each genre column, find the region with the highest score
-       so we can stamp it with the 🏆 "Best in Genre" badge. */
-    const bestRegionPerGenre = heatmapGenres.map((_, colIdx) => {
-      let bestRow = -1;
+    /* For each genre column, every region tied for the highest score gets the 🏆
+       badge (e.g. Comedy: Japan and Korea both at 7.200). */
+    const bestRowsPerGenre = heatmapGenres.map((_, colIdx) => {
       let bestScore = -Infinity;
+      heatmapRegions.forEach((region) => {
+        const s = region.scores[colIdx];
+        if (s != null && s > bestScore) bestScore = s;
+      });
+      const rows = [];
       heatmapRegions.forEach((region, rowIdx) => {
         const s = region.scores[colIdx];
-        if (s != null && s > bestScore) {
-          bestScore = s;
-          bestRow = rowIdx;
-        }
+        if (s != null && s === bestScore) rows.push(rowIdx);
       });
-      return bestRow;
+      return rows;
     });
 
     const buildHeatmap = () => {
@@ -1308,7 +1317,7 @@
           if (bg) td.style.backgroundColor = bg;
 
           const isBestInGenre =
-            score != null && bestRegionPerGenre[colIdx] === rowIdx;
+            score != null && bestRowsPerGenre[colIdx].includes(rowIdx);
 
           const genreFull = heatmapGenres[colIdx].full;
 
@@ -1331,7 +1340,7 @@
               : '';
             td.setAttribute(
               'aria-label',
-              `${region.name}, ${genreFull}: average IMDb score ${text}${trophyAria}`
+              `${region.name}, ${genreFull}: median IMDb score ${text}${trophyAria}`
             );
             td.title = `${region.name} · ${genreFull} — ${text}${
               isBestInGenre ? '  · Best in genre' : ''
@@ -1379,16 +1388,16 @@
            Source data preserved: genre, country, flag, score.
        --------------------------------------------------------- */
     const genreData = [
-      { genre: "Action",        country: "Japan",       flag: "🇯🇵", score: 6.993 },
-      { genre: "Animation",     country: "Mexico",      flag: "🇲🇽", score: 7.500 },
-      { genre: "Comedy",        country: "Japan",       flag: "🇯🇵", score: 7.214 },
-      { genre: "Crime",         country: "South Korea", flag: "🇰🇷", score: 7.638 },
-      { genre: "Documentation", country: "Japan",       flag: "🇯🇵", score: 7.650 },
-      { genre: "Drama",         country: "South Korea", flag: "🇰🇷", score: 7.611 },
-      { genre: "Reality",       country: "South Korea", flag: "🇰🇷", score: 7.300 },
-      { genre: "Romance",       country: "South Korea", flag: "🇰🇷", score: 7.800 },
-      { genre: "Sci-fi",        country: "Japan",       flag: "🇯🇵", score: 7.144 },
-      { genre: "Thriller",      country: "Mexico",      flag: "🇲🇽", score: 7.000 }
+      { genre: 'Action', country: 'Japan', flag: '🇯🇵', score: 7.05 },
+      { genre: 'Animation', country: 'Mexico', flag: '🇲🇽', score: 7.5 },
+      { genre: 'Comedy', country: 'South Korea', flag: '🇰🇷', score: 7.2 },
+      { genre: 'Crime', country: 'South Korea', flag: '🇰🇷', score: 7.8 },
+      { genre: 'Documentation', country: 'Japan', flag: '🇯🇵', score: 7.65 },
+      { genre: 'Drama', country: 'South Korea', flag: '🇰🇷', score: 7.6 },
+      { genre: 'Reality', country: 'South Korea', flag: '🇰🇷', score: 7.3 },
+      { genre: 'Romance', country: 'South Korea', flag: '🇰🇷', score: 8.1 },
+      { genre: 'Sci-fi', country: 'Japan', flag: '🇯🇵', score: 7.3 },
+      { genre: 'Thriller', country: 'Mexico', flag: '🇲🇽', score: 7.0 },
     ];
 
     const toggleFlip = (card) => {
@@ -1403,7 +1412,7 @@
       card.setAttribute('aria-pressed', 'false');
       card.setAttribute(
         'aria-label',
-        `${item.genre}. Click to reveal top country: ${item.country}, average IMDb score ${item.score.toFixed(2)}.`
+        `${item.genre}. Click to reveal top country: ${item.country}, median IMDb score ${item.score.toFixed(2)}.`
       );
 
       const inner = document.createElement('div');
@@ -1421,7 +1430,7 @@
       back.innerHTML = `
         <span class="flip-card-flag" aria-hidden="true">${item.flag}</span>
         <span class="flip-card-country">${item.country}</span>
-        <span class="flip-card-score-label">Avg IMDb</span>
+        <span class="flip-card-score-label">Median IMDb</span>
         <span class="flip-card-score">${item.score.toFixed(2)}</span>
       `;
 
@@ -1708,7 +1717,254 @@
     };
 
     /* ---------------------------------------------------------
-       6c. Quiz reveal #2 — qualified volume horizontal bars (D3)
+       6b-bis. Quiz reveal #1 — US vs Non-US box plots (D3)
+       --------------------------------------------------------- */
+    const initRevealRegionalBoxplots = () => {
+      if (typeof window.d3 === 'undefined') return;
+
+      const d3 = window.d3;
+      const reveal = document.getElementById('reveal');
+      const stack = document.getElementById('boxplot-us-non-us');
+      const rootUs = document.getElementById('boxplot-us-region');
+      const rootIntl = document.getElementById('boxplot-intl-region');
+      if (!reveal || !stack || !rootUs || !rootIntl) return;
+
+      const regionalTooltip = d3.select('#boxplot-regional-tooltip');
+      const csvUrl = 'netflix_cleaned_categorized.csv';
+      const margin = { top: 20, right: 28, bottom: 52, left: 58 };
+      const typesOrder = ['MOVIE', 'SHOW'];
+
+      let statsUs = null;
+      let statsIntl = null;
+      let resizeTimer = null;
+      let started = false;
+
+      const buildUniqueRegionalMaps = (rawData) => {
+        const uniqueMapUs = new Map();
+        const uniqueMapIntl = new Map();
+        rawData.forEach((d) => {
+          const score = +d.imdb_score;
+          const typ = String(d.type || '').toUpperCase();
+          const country = d.country_clean;
+          if (!Number.isNaN(score) && score > 0 && typ) {
+            if (country === 'US') {
+              if (!uniqueMapUs.has(d.id)) uniqueMapUs.set(d.id, { type: typ, imdb_score: score });
+            } else if (!uniqueMapIntl.has(d.id)) {
+              uniqueMapIntl.set(d.id, { type: typ, imdb_score: score });
+            }
+          }
+        });
+        return { uniqueMapUs, uniqueMapIntl };
+      };
+
+      const statsFromMap = (uniqueMap) => {
+        const cleaned = Array.from(uniqueMap.values());
+        const grouped = d3.group(cleaned, (v) => v.type);
+        return typesOrder
+          .filter((t) => grouped.has(t))
+          .map((type) => {
+            const vals = grouped.get(type);
+            const scores = vals.map((v) => v.imdb_score).sort(d3.ascending);
+            const q1 = d3.quantile(scores, 0.25);
+            const median = d3.quantile(scores, 0.5);
+            const q3 = d3.quantile(scores, 0.75);
+            return {
+              type,
+              q1: q1 ?? scores[0],
+              median: median ?? scores[0],
+              q3: q3 ?? scores[scores.length - 1],
+              min: scores[0],
+              max: scores[scores.length - 1],
+              count: vals.length,
+            };
+          });
+      };
+
+      const positionRegionalTooltip = (event) => {
+        const px = event.clientX + 14;
+        const py = Math.max(12, event.clientY - 10);
+        regionalTooltip.style('left', `${px}px`).style('top', `${py}px`);
+      };
+
+      const tipHtmlRegional = (d) =>
+        `<div class="boxplot-tooltip-header">${d.type} (N=${d.count})</div>` +
+        `<div class="boxplot-tooltip-row"><span class="boxplot-tooltip-label">Max:</span><span class="boxplot-tooltip-value">${d.max.toFixed(1)}</span></div>` +
+        `<div class="boxplot-tooltip-row"><span class="boxplot-tooltip-label">Q3 (75%):</span><span class="boxplot-tooltip-value">${d.q3.toFixed(1)}</span></div>` +
+        `<div class="boxplot-tooltip-row boxplot-tooltip-row--median"><span class="boxplot-tooltip-label">Median:</span><span class="boxplot-tooltip-value">${d.median.toFixed(1)}</span></div>` +
+        `<div class="boxplot-tooltip-row"><span class="boxplot-tooltip-label">Q1 (25%):</span><span class="boxplot-tooltip-value">${d.q1.toFixed(1)}</span></div>` +
+        `<div class="boxplot-tooltip-row"><span class="boxplot-tooltip-label">Min:</span><span class="boxplot-tooltip-value">${d.min.toFixed(1)}</span></div>`;
+
+      const renderRegionalPanel = (rootEl, panelStats, animate) => {
+        if (!panelStats || !panelStats.length) {
+          rootEl.innerHTML =
+            '<p class="boxplot-error">No score data for this region.</p>';
+          return;
+        }
+
+        const panelChart = rootEl.closest('.boxplot-regional-panel-chart');
+        const outerW = Math.max(
+          160,
+          Math.floor((panelChart && panelChart.getBoundingClientRect().width) || rootEl.getBoundingClientRect().width)
+        );
+        const outerH = Math.round(Math.min(480, Math.max(300, outerW * 0.52)));
+
+        const innerW = Math.max(80, outerW - margin.left - margin.right);
+        const innerH = Math.max(160, outerH - margin.top - margin.bottom);
+
+        rootEl.innerHTML = '';
+
+        const svgRegional = d3
+          .select(rootEl)
+          .append('svg')
+          .attr('width', '100%')
+          .attr('height', null)
+          .attr('preserveAspectRatio', 'xMidYMin meet')
+          .attr('viewBox', `0 0 ${outerW} ${outerH}`)
+          .style('background', 'transparent');
+
+        if (animate) svgRegional.style('opacity', 0);
+
+        const gRegional = svgRegional.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+        const xRegional = d3
+          .scaleBand()
+          .domain(panelStats.map((d) => d.type))
+          .range([0, innerW])
+          .padding(0.6);
+        const yRegional = d3.scaleLinear().domain([0, 10]).range([innerH, 0]);
+
+        gRegional
+          .append('g')
+          .attr('transform', `translate(0,${innerH})`)
+          .attr('class', 'boxplot-axis axis')
+          .call(d3.axisBottom(xRegional));
+
+        gRegional.append('g').attr('class', 'boxplot-axis axis').call(d3.axisLeft(yRegional).ticks(5));
+
+        const groupsRegional = gRegional.selectAll('.boxplot-group-regional').data(panelStats).enter().append('g');
+
+        groupsRegional
+          .append('line')
+          .attr('class', 'boxplot-whisker-line')
+          .attr('x1', (d) => xRegional(d.type) + xRegional.bandwidth() / 2)
+          .attr('x2', (d) => xRegional(d.type) + xRegional.bandwidth() / 2)
+          .attr('y1', (d) => yRegional(d.min))
+          .attr('y2', (d) => yRegional(d.max));
+
+        groupsRegional
+          .append('line')
+          .attr('class', 'boxplot-whisker-cap')
+          .attr('x1', (d) => xRegional(d.type) + xRegional.bandwidth() * 0.3)
+          .attr('x2', (d) => xRegional(d.type) + xRegional.bandwidth() * 0.7)
+          .attr('y1', (d) => yRegional(d.max))
+          .attr('y2', (d) => yRegional(d.max));
+
+        groupsRegional
+          .append('line')
+          .attr('class', 'boxplot-whisker-cap')
+          .attr('x1', (d) => xRegional(d.type) + xRegional.bandwidth() * 0.3)
+          .attr('x2', (d) => xRegional(d.type) + xRegional.bandwidth() * 0.7)
+          .attr('y1', (d) => yRegional(d.min))
+          .attr('y2', (d) => yRegional(d.min));
+
+        groupsRegional
+          .append('rect')
+          .attr('class', (d) =>
+            d.type === 'MOVIE' ? 'boxplot-box boxplot-box--movie' : 'boxplot-box boxplot-box--show'
+          )
+          .attr('x', (d) => xRegional(d.type))
+          .attr('y', (d) => yRegional(d.q3))
+          .attr('width', xRegional.bandwidth())
+          .attr('height', (d) => Math.max(1, yRegional(d.q1) - yRegional(d.q3)))
+          .on('mouseover', function (event, d) {
+            if (d.type === 'MOVIE') d3.select(this).attr('fill-opacity', 1);
+            else d3.select(this).style('filter', 'brightness(1.18)');
+            regionalTooltip.style('display', 'block').html(tipHtmlRegional(d));
+            positionRegionalTooltip(event);
+          })
+          .on('mousemove', (event) => positionRegionalTooltip(event))
+          .on('mouseleave', function (event, d) {
+            if (d.type === 'MOVIE') d3.select(this).attr('fill-opacity', 0.8);
+            else d3.select(this).style('filter', null);
+            regionalTooltip.style('display', 'none');
+          });
+
+        groupsRegional
+          .append('line')
+          .attr('class', 'boxplot-median-line')
+          .attr('x1', (d) => xRegional(d.type))
+          .attr('x2', (d) => xRegional(d.type) + xRegional.bandwidth())
+          .attr('y1', (d) => yRegional(d.median))
+          .attr('y2', (d) => yRegional(d.median));
+
+        if (animate) {
+          svgRegional.transition().duration(700).ease(d3.easeCubicOut).style('opacity', 1);
+        } else {
+          svgRegional.style('opacity', 1);
+        }
+      };
+
+      const renderRegionalBoth = (animate) => {
+        renderRegionalPanel(rootUs, statsUs, animate);
+        renderRegionalPanel(rootIntl, statsIntl, animate);
+      };
+
+      const debouncedRegionalRender = () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => renderRegionalBoth(false), 120);
+      };
+
+      const bootRegional = () => {
+        if (started) return;
+        started = true;
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            d3.csv(csvUrl)
+              .then((raw) => {
+                const { uniqueMapUs, uniqueMapIntl } = buildUniqueRegionalMaps(raw);
+                statsUs = statsFromMap(uniqueMapUs);
+                statsIntl = statsFromMap(uniqueMapIntl);
+                if (!statsUs.length && !statsIntl.length) {
+                  const contentEl = document.getElementById('boxplot-regional-content');
+                  if (contentEl) {
+                    contentEl.innerHTML =
+                      '<p class="boxplot-error">No regional score data found. Check CSV <code>country_clean</code> / <code>type</code> values.</p>';
+                  }
+                  return;
+                }
+                renderRegionalBoth(true);
+                if (typeof ResizeObserver !== 'undefined') {
+                  const ro = new ResizeObserver(() => debouncedRegionalRender());
+                  ro.observe(stack);
+                }
+                window.addEventListener('resize', debouncedRegionalRender, { passive: true });
+              })
+              .catch(() => {
+                const contentEl = document.getElementById('boxplot-regional-content');
+                if (contentEl) {
+                  contentEl.innerHTML =
+                    '<p class="boxplot-error">Chart data unavailable. Add <code>netflix_cleaned_categorized.csv</code> next to this page.</p>';
+                }
+              });
+          })
+        );
+      };
+
+      const moRegional = new MutationObserver(() => {
+        if (reveal.classList.contains('is-visible')) {
+          moRegional.disconnect();
+          bootRegional();
+        }
+      });
+      moRegional.observe(reveal, { attributes: true, attributeFilter: ['class'] });
+      if (reveal.classList.contains('is-visible')) {
+        moRegional.disconnect();
+        bootRegional();
+      }
+    };
+
+    /* ---------------------------------------------------------
+       6c. Quiz reveal #2 — qualified volume stacked bars (US vs International)
        --------------------------------------------------------- */
     const initReveal2VolumeBar = () => {
       if (typeof window.d3 === 'undefined') return;
@@ -1720,8 +1976,10 @@
 
       const csvUrl = 'netflix_cleaned_categorized.csv';
       const BAR_DURATION_MS = 1200;
-      const LABEL_FADE_MS = 520;
+      const SEGMENT_LABEL_DELAY_MS = 800;
+      const SEGMENT_LABEL_FADE_MS = 600;
       const LAYOUT_SETTLE_MS = 50;
+      const regions = ['US', 'International'];
 
       let barData = null;
       let dataPromise = null;
@@ -1735,12 +1993,32 @@
         rawData.forEach((d) => {
           const score = +d.imdb_score;
           if (!uniqueMap.has(d.id) && !Number.isNaN(score) && score > 0) {
-            uniqueMap.set(d.id, String(d.type || '').toUpperCase());
+            const region = String(d.country_clean || '').trim() === 'US' ? 'US' : 'International';
+            uniqueMap.set(d.id, {
+              type: String(d.type || '').toUpperCase(),
+              region,
+            });
           }
         });
-        const types = Array.from(uniqueMap.values());
-        const rolled = d3.rollup(types, (v) => v.length, (t) => t);
-        return Array.from(rolled, ([type, count]) => ({ type, count })).sort((a, b) => b.count - a.count);
+        const cleanedArray = Array.from(uniqueMap.values());
+        const counts = d3.rollup(
+          cleanedArray,
+          (v) => v.length,
+          (row) => row.type,
+          (row) => row.region
+        );
+        const types = Array.from(counts.keys());
+        return types
+          .map((type) => {
+            const row = { type, total: 0 };
+            regions.forEach((region) => {
+              const count = counts.get(type)?.get(region) || 0;
+              row[region] = count;
+              row.total += count;
+            });
+            return row;
+          })
+          .sort((a, b) => b.total - a.total);
       };
 
       const ensureData = () => {
@@ -1777,21 +2055,21 @@
       };
 
       /**
-       * Build / update SVG. When animate is true, rects start at width 0 then grow
-       * together (1200ms, easeExpOut); labels fade after bars finish.
+       * Horizontal stacked bars by format (MOVIE / SHOW), segments = US vs International.
+       * animate: grow segment widths; segment + total labels fade in after delay.
        */
       function render(animate) {
         if (!barData || !barData.length) return;
 
         const outerW = Math.max(280, Math.floor(root.getBoundingClientRect().width));
-        const maxCount = d3.max(barData, (d) => d.count) || 0;
-        const digitRoom = String(Math.round(maxCount)).length * 9 + 40;
+        const maxTotal = d3.max(barData, (d) => d.total) || 0;
+        const digitRoom = String(Math.round(maxTotal)).length * 9 + 40;
 
         const margin = {
-          top: 12,
-          right: Math.max(92, digitRoom),
-          bottom: 24,
-          left: Math.max(116, Math.min(148, Math.round(outerW * 0.2))),
+          top: 10,
+          right: Math.max(100, digitRoom),
+          bottom: 20,
+          left: Math.max(100, Math.min(148, Math.round(outerW * 0.22))),
         };
 
         const innerW = Math.max(80, outerW - margin.left - margin.right);
@@ -1818,48 +2096,85 @@
           .range([0, innerH])
           .padding(0.4);
 
-        const x = d3.scaleLinear().domain([0, maxCount]).range([0, innerW]);
+        const x = d3.scaleLinear().domain([0, maxTotal]).range([0, innerW]);
+
+        const color = d3.scaleOrdinal().domain(regions).range(['#E50914', '#555555']);
+
+        const stack = d3.stack().keys(regions);
+        const series = stack(barData);
 
         g.append('g').attr('class', 'volume-bar-axis axis').call(d3.axisLeft(y));
 
-        const bars = g
-          .selectAll('.volume-bar-rect')
-          .data(barData)
+        const layerSel = g
+          .selectAll('g.volume-bar-layer')
+          .data(series)
+          .enter()
+          .append('g')
+          .attr('class', 'volume-bar-layer')
+          .attr('fill', (d) => color(d.key));
+
+        const rects = layerSel
+          .selectAll('rect.volume-bar-segment')
+          .data((d) => d)
           .enter()
           .append('rect')
-          .attr('class', 'volume-bar-rect')
-          .attr('y', (d) => y(d.type))
-          .attr('x', 0)
+          .attr('class', 'volume-bar-segment')
+          .attr('y', (d) => y(d.data.type))
+          .attr('x', (d) => x(d[0]))
           .attr('height', y.bandwidth())
-          .attr('width', 0);
+          .attr('width', animate ? 0 : (d) => x(d[1]) - x(d[0]));
 
-        const labels = g
-          .selectAll('.volume-bar-label')
+        const segmentLabels = layerSel
+          .selectAll('text.volume-bar-segment-label')
+          .data((d) => d)
+          .enter()
+          .append('text')
+          .attr('class', 'volume-bar-segment-label')
+          .attr('y', (d) => y(d.data.type) + y.bandwidth() / 2 + 4)
+          .attr('x', (d) => x(d[0]) + (x(d[1]) - x(d[0])) / 2)
+          .attr('text-anchor', 'middle')
+          .text((d) => {
+            const val = d[1] - d[0];
+            const total = d.data.total;
+            const segW = x(d[1]) - x(d[0]);
+            if (val <= 0 || total <= 0 || segW < 44) return '';
+            const percentage = ((val / total) * 100).toFixed(1);
+            return `${val.toLocaleString()} (${percentage}%)`;
+          })
+          .style('opacity', animate ? 0 : 1);
+
+        const totals = g
+          .selectAll('text.volume-bar-total-label')
           .data(barData)
           .enter()
           .append('text')
-          .attr('class', 'volume-bar-label')
-          .attr('y', (d) => y(d.type) + y.bandwidth() / 2)
-          .attr('x', (d) => x(d.count) + 12)
+          .attr('class', 'volume-bar-total-label')
+          .attr('y', (d) => y(d.type) + y.bandwidth() / 2 + 5)
+          .attr('x', (d) => x(d.total) + 15)
           .attr('text-anchor', 'start')
-          .text((d) => d.count.toLocaleString())
-          .style('opacity', 0);
+          .text((d) => d.total.toLocaleString())
+          .style('opacity', animate ? 0 : 1);
 
         if (animate) {
-          bars
+          rects
             .transition()
             .duration(BAR_DURATION_MS)
             .ease(d3.easeExpOut)
-            .attr('width', (d) => x(d.count));
-          labels
+            .attr('width', (d) => x(d[1]) - x(d[0]));
+
+          segmentLabels
             .transition()
-            .delay(BAR_DURATION_MS)
-            .duration(LABEL_FADE_MS)
+            .delay(SEGMENT_LABEL_DELAY_MS)
+            .duration(SEGMENT_LABEL_FADE_MS)
             .ease(d3.easeCubicOut)
             .style('opacity', 1);
-        } else {
-          bars.attr('width', (d) => x(d.count));
-          labels.style('opacity', 1);
+
+          totals
+            .transition()
+            .delay(SEGMENT_LABEL_DELAY_MS)
+            .duration(SEGMENT_LABEL_FADE_MS)
+            .ease(d3.easeCubicOut)
+            .style('opacity', 1);
         }
       }
 
@@ -1875,7 +2190,7 @@
           ensureData().then((data) => {
             if (!data || !data.length) {
               root.innerHTML =
-                '<p class="volume-bar-error">Chart data unavailable. Add <code>netflix_cleaned_categorized.csv</code> or check CSV <code>type</code> values.</p>';
+                '<p class="volume-bar-error">Chart data unavailable. Add <code>netflix_cleaned_categorized.csv</code> or check CSV <code>type</code> / <code>country_clean</code> values.</p>';
               return;
             }
             introHasRun = true;
@@ -2073,6 +2388,221 @@
         .catch(() => {
           container.innerHTML =
             '<p class="content-pivot-error">Chart data unavailable. Add <code>netflix_cleaned_categorized.csv</code> next to this page.</p>';
+        });
+    };
+
+    /* ---------------------------------------------------------
+       6d-bis. Deep dive — Regional dual charts (US vs Non-US)
+       --------------------------------------------------------- */
+    const initRegionalDualCharts = () => {
+      if (typeof window.d3 === 'undefined') return;
+
+      const d3 = window.d3;
+      const block = document.getElementById('block-regional-pivot');
+      const usContainer = document.getElementById('regional-pivot-us-container');
+      const intlContainer = document.getElementById('regional-pivot-intl-container');
+      if (!block || !usContainer || !intlContainer) return;
+
+      const csvUrl = 'netflix_cleaned_categorized.csv';
+      const margin = { top: 60, right: 20, bottom: 30, left: 45 };
+      const containers = [usContainer, intlContainer];
+
+      let usData = null;
+      let intlData = null;
+      let minYear = Infinity;
+      let maxYear = -Infinity;
+      let fullYears = [];
+      let globalMaxY = 1;
+      let slidePct = 50;
+      let resizeTimer = null;
+      let listenersBound = false;
+
+      const measureDims = (el) => {
+        const r = el.getBoundingClientRect();
+        const cw = Math.max(200, Math.floor(r.width));
+        const ch = Math.max(220, Math.floor(r.height));
+        return { cw, ch };
+      };
+
+      const applyClipAll = (pct) => {
+        slidePct = Math.max(0, Math.min(100, pct));
+        containers.forEach((container) => {
+          const movieLayerEl = container.querySelector('.movie-layer');
+          const showLayerEl = container.querySelector('.show-layer');
+          const handleEl = container.querySelector('.regional-dual-slider-handle');
+          if (!movieLayerEl || !showLayerEl || !handleEl) return;
+          movieLayerEl.style.clipPath = `inset(0 ${100 - slidePct}% 0 0)`;
+          movieLayerEl.style.webkitClipPath = `inset(0 ${100 - slidePct}% 0 0)`;
+          showLayerEl.style.clipPath = `inset(0 0 0 ${slidePct}%)`;
+          showLayerEl.style.webkitClipPath = `inset(0 0 0 ${slidePct}%)`;
+          handleEl.style.left = `${slidePct}%`;
+          handleEl.style.transform = 'translateX(-50%)';
+        });
+      };
+
+      const syncSliders = (clientX, sourceContainer) => {
+        const rect = sourceContainer.getBoundingClientRect();
+        let xPos = clientX - rect.left;
+        xPos = Math.max(0, Math.min(xPos, rect.width));
+        const percentage = rect.width ? (xPos / rect.width) * 100 : 50;
+        applyClipAll(percentage);
+      };
+
+      const renderLayer = (containerEl, layerSel, data, colorClass, dims) => {
+        const { cw, ch } = dims;
+        const innerW = Math.max(40, cw - margin.left - margin.right);
+        const innerH = Math.max(40, ch - margin.top - margin.bottom);
+        const layer = d3.select(containerEl).select(layerSel);
+        layer.selectAll('*').remove();
+
+        const svg = layer
+          .append('svg')
+          .attr('viewBox', `0 0 ${cw} ${ch}`)
+          .attr('width', '100%')
+          .attr('height', '100%')
+          .attr('preserveAspectRatio', 'xMidYMid meet');
+
+        const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+        const xRp = d3.scaleLinear().domain([minYear, maxYear]).range([0, innerW]);
+        const yRp = d3.scaleLinear().domain([0, globalMaxY]).range([innerH, 0]);
+
+        g.append('g')
+          .attr('transform', `translate(0,${innerH})`)
+          .attr('class', 'regional-dual-axis axis')
+          .call(d3.axisBottom(xRp).tickFormat(d3.format('d')).ticks(8));
+
+        g.append('g').attr('class', 'regional-dual-axis axis').call(d3.axisLeft(yRp).ticks(5));
+
+        const area = d3
+          .area()
+          .x((d) => xRp(d.year))
+          .y0(innerH)
+          .y1((d) => yRp(d.count))
+          .curve(d3.curveMonotoneX);
+
+        const line = d3
+          .line()
+          .x((d) => xRp(d.year))
+          .y((d) => yRp(d.count))
+          .curve(d3.curveMonotoneX);
+
+        g.append('path').datum(data).attr('class', `area-${colorClass}`).attr('d', area);
+        g.append('path').datum(data).attr('class', `line-${colorClass}`).attr('d', line);
+      };
+
+      const draw = () => {
+        if (!usData || !intlData) return;
+        const dims = measureDims(usContainer);
+        renderLayer(usContainer, '.movie-layer', usData.movieData, 'movie', dims);
+        renderLayer(usContainer, '.show-layer', usData.showData, 'show', dims);
+        renderLayer(intlContainer, '.movie-layer', intlData.movieData, 'movie', dims);
+        renderLayer(intlContainer, '.show-layer', intlData.showData, 'show', dims);
+        applyClipAll(slidePct);
+      };
+
+      const scheduleResize = () => {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => draw(), 80);
+      };
+
+      const bindInteractions = () => {
+        if (listenersBound) return;
+        listenersBound = true;
+        containers.forEach((container) => {
+          container.addEventListener('pointermove', (e) => syncSliders(e.clientX, container));
+          container.addEventListener(
+            'touchmove',
+            (e) => {
+              const t = e.touches[0];
+              if (t) syncSliders(t.clientX, container);
+            },
+            { passive: true }
+          );
+        });
+      };
+
+      d3.csv(csvUrl)
+        .then((rawData) => {
+          const uniqueMapUS = new Map();
+          const uniqueMapIntl = new Map();
+          minYear = Infinity;
+          maxYear = -Infinity;
+
+          rawData.forEach((d) => {
+            const score = +d.imdb_score;
+            const year = +d.release_year;
+            const country = d.country_clean;
+            const key = `${d.id}_${year}`;
+
+            if (!Number.isNaN(score) && score > 0) {
+              if (year < minYear) minYear = year;
+              if (year > maxYear) maxYear = year;
+              const dataPoint = { year, type: d.type ? String(d.type).toUpperCase() : 'UNKNOWN' };
+              if (country === 'US') {
+                if (!uniqueMapUS.has(key)) uniqueMapUS.set(key, dataPoint);
+              } else if (!uniqueMapIntl.has(key)) {
+                uniqueMapIntl.set(key, dataPoint);
+              }
+            }
+          });
+
+          if (!Number.isFinite(minYear) || !Number.isFinite(maxYear) || minYear > maxYear) {
+            const wrap = block.querySelector('.regional-dual-charts-wrapper');
+            if (wrap) {
+              wrap.innerHTML =
+                '<p class="content-pivot-error">No yearly title data found in the CSV.</p>';
+            }
+            return;
+          }
+
+          fullYears = d3.range(minYear, maxYear + 1);
+
+          const processData = (mapData) => {
+            const arrayData = Array.from(mapData.values());
+            const nestedData = d3.rollup(
+              arrayData,
+              (v) => v.length,
+              (row) => row.year,
+              (row) => row.type
+            );
+            const movieData = fullYears.map((y) => ({
+              year: y,
+              count: nestedData.get(y)?.get('MOVIE') || 0,
+            }));
+            const showData = fullYears.map((y) => ({
+              year: y,
+              count: nestedData.get(y)?.get('SHOW') || 0,
+            }));
+            return { movieData, showData };
+          };
+
+          usData = processData(uniqueMapUS);
+          intlData = processData(uniqueMapIntl);
+
+          const allCounts = [
+            ...usData.movieData,
+            ...usData.showData,
+            ...intlData.movieData,
+            ...intlData.showData,
+          ].map((d) => d.count);
+          globalMaxY = Math.max(1, d3.max(allCounts) || 0);
+
+          draw();
+          bindInteractions();
+
+          if (typeof ResizeObserver !== 'undefined') {
+            const ro = new ResizeObserver(() => scheduleResize());
+            ro.observe(usContainer);
+          }
+          window.addEventListener('resize', scheduleResize, { passive: true });
+        })
+        .catch(() => {
+          const wrap = block.querySelector('.regional-dual-charts-wrapper');
+          if (wrap) {
+            wrap.innerHTML =
+              '<p class="content-pivot-error">Chart data unavailable. Add <code>netflix_cleaned_categorized.csv</code> next to this page.</p>';
+          }
         });
     };
 
@@ -2398,14 +2928,18 @@
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => {
         initRevealBoxplot();
+        initRevealRegionalBoxplots();
         initReveal2VolumeBar();
         initContentPivotSlider();
+        initRegionalDualCharts();
         initInternationalTrendsChart();
       });
     } else {
       initRevealBoxplot();
+      initRevealRegionalBoxplots();
       initReveal2VolumeBar();
       initContentPivotSlider();
+      initRegionalDualCharts();
       initInternationalTrendsChart();
     }
 

@@ -202,13 +202,11 @@
           <div class="step-card">
             <p class="step-kicker">Insight</p>
             <p class="step-copy">
-              While US volume is huge, its market share is slowly shrinking as
-              other countries start to produce more.
+              While US <span style="color: #E50914;">volume</span> is huge, 
+              its <span style="color: #E50914;">market share</span> 
+              is slowly shrinking as other countries start to produce more.
             </p>
-            <p class="step-sub">
-              The global content landscape is becoming increasingly diverse, with
-              countries like South Korea, Spain, and France gaining momentum.
-            </p>
+          
           </div>
           <div
             class="scrolly-visual"
@@ -253,7 +251,7 @@
       <p class="quiz-eyebrow">QUICK POLL</p>
       <h2 class="quiz-question">
         Which format do you think Netflix viewers
-        <span class="quiz-question-accent">rate higher?</span>
+        <span class="quiz-question-accent">rate IMDB score higher?</span>
       </h2>
 
       <div class="quiz-options" role="group" aria-label="Choose a format">
@@ -305,23 +303,46 @@
     <div class="reveal-inner">
       <p class="reveal-eyebrow">THE ANSWER</p>
       <h2 class="reveal-title">
-        TV Shows often maintain higher engagement
-        <br />
-        and satisfaction levels.
+        TV Shows slightly receive higher IMDB scores. 
       </h2>
       <p class="reveal-sub">
-        Boxplot of viewer scores — Hover on the box to see details.
+        The format of TV Shows allows 
+        for greater character development and 'second chances' across episodes, 
+        which often results in stronger emotional resonance and higher IMDb scores 
+        compared to the limited window of a feature film. <br> 
+        <span style="color: #E50914;">Hover on the box to see details.</span> </br>
       </p>
 
       <div
         class="reveal-chart reveal-chart--boxplot"
         id="reveal-chart"
-        aria-label="Movie versus TV show IMDb score distribution (box plot)"
+        aria-label="Movie versus TV show IMDb score distribution and US versus international comparison (box plots)"
       >
         <div id="boxplot-container" class="boxplot-container">
           <div class="boxplot-chart-title">Global Score Distribution: Movie vs Show</div>
           <div id="boxplot" class="boxplot-root"></div>
           <div id="boxplot-tooltip" class="boxplot-tooltip" role="tooltip"></div>
+        </div>
+
+        <div id="boxplot-us-non-us" class="boxplot-regional-stack">
+          <div id="boxplot-regional-content">
+            <p class="boxplot-regional-between-label">Regional Quality Comparison: US vs International</p>
+            <div class="boxplot-regional-panels">
+              <div class="boxplot-regional-panel">
+                <div class="boxplot-regional-panel-heading">United States (US)</div>
+                <div class="boxplot-regional-panel-chart boxplot-container">
+                  <div id="boxplot-us-region" class="boxplot-root"></div>
+                </div>
+              </div>
+              <div class="boxplot-regional-panel">
+                <div class="boxplot-regional-panel-heading">International (Non-US)</div>
+                <div class="boxplot-regional-panel-chart boxplot-container">
+                  <div id="boxplot-intl-region" class="boxplot-root"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="boxplot-regional-tooltip" class="boxplot-tooltip" role="tooltip"></div>
         </div>
       </div>
     </div>
@@ -339,8 +360,8 @@
     <div class="quiz-inner">
       <p class="quiz-eyebrow">QUICK POLL · 02</p>
       <h2 class="quiz-question">
-        Which format do you think dominates the Netflix library
-        <span class="quiz-question-accent">in terms of volume?</span>
+        Which format has <span class="quiz-question-accent">more titles</span> in the Netflix library?
+  
       </h2>
 
       <div class="quiz-options" role="group" aria-label="Choose a format">
@@ -392,7 +413,7 @@
     <div class="reveal-inner">
       <p class="reveal-eyebrow">THE ANSWER · 02</p>
       <h2 class="reveal-title">
-        Movies still dominate the library in sheer volume, but TV Shows are the true engagement leaders.
+        Movies still dominate the library in sheer volume.
         
       
       </h2>
@@ -403,20 +424,34 @@
       <div
         class="reveal-chart reveal-chart--volume"
         id="reveal-chart-2"
-        aria-label="Qualified content volume: Movies versus TV shows"
+        aria-label="Qualified content volume by region: US versus International, Movies versus TV shows"
       >
         <div id="volume-bar-container" class="volume-bar-container">
-          <div class="volume-bar-title">Qualified Content Volume</div>
-          <p class="volume-bar-subtitle">
-            Distinct titles with valid IMDb scores (matches box plot N)
-          </p>
+          <div class="volume-bar-header">
+            <div class="volume-bar-heading">
+              <div class="volume-bar-title">Qualified Content Volume</div>
+              <p class="volume-bar-subtitle">
+                Distinct titles with valid IMDb scores (US vs International)
+              </p>
+            </div>
+            <div class="volume-bar-legend" aria-hidden="true">
+              <div class="volume-bar-legend-item">
+                <span class="volume-bar-legend-swatch volume-bar-legend-swatch--us"></span>
+                US
+              </div>
+              <div class="volume-bar-legend-item">
+                <span class="volume-bar-legend-swatch volume-bar-legend-swatch--intl"></span>
+                International
+              </div>
+            </div>
+          </div>
           <div id="volume-bar-root" class="volume-bar-root"></div>
         </div>
       </div>
 
       <p class="reveal-note">
         <strong>Note:</strong> This count represents individual titles. However,
-        the &ldquo;volume&rdquo; of content for TV Shows is significantly higher when
+        the volume of content for TV Shows is significantly higher when
         factoring in multiple episodes and seasons per title.
       </p>
     </div>
@@ -500,6 +535,53 @@
                 aria-valuenow="50"
                 tabindex="0"
               ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Container 1.1: Regional Pivot — US vs Non-US dual comparison ── -->
+      <div class="deepdive-block" id="block-regional-pivot">
+        <div class="deepdive-block-header">
+          <span class="deepdive-block-tag">1.1 · REGIONAL PIVOT</span>
+          <h3 class="deepdive-block-title">Movies vs. TV Shows — US vs Non-US Growth Rate</h3>
+          <p class="deepdive-block-desc">
+            A side-by-side comparison of how content formats are evolving in the domestic versus global markets.
+          </p>
+        </div>
+        <div class="deepdive-chart-wrap">
+          <div
+            class="regional-dual-charts-wrapper"
+            role="group"
+            aria-label="Compare movie versus show volume in the US and internationally"
+          >
+            <div class="regional-dual-chart-section">
+              <div class="regional-dual-section-header">United States (US)</div>
+              <div
+                id="regional-pivot-us-container"
+                class="regional-dual-comparison-container"
+                aria-label="US movie versus show volume comparison. Drag horizontally to reveal."
+              >
+                <div class="regional-dual-label-tag regional-dual-label-movie">Movie Perspective</div>
+                <div class="regional-dual-label-tag regional-dual-label-show">Show Perspective</div>
+                <div class="regional-dual-chart-layer movie-layer"></div>
+                <div class="regional-dual-chart-layer show-layer"></div>
+                <div class="regional-dual-slider-handle"></div>
+              </div>
+            </div>
+            <div class="regional-dual-chart-section">
+              <div class="regional-dual-section-header">International (Non-US)</div>
+              <div
+                id="regional-pivot-intl-container"
+                class="regional-dual-comparison-container"
+                aria-label="Non-US movie versus show volume comparison. Drag horizontally to reveal."
+              >
+                <div class="regional-dual-label-tag regional-dual-label-movie">Movie Perspective</div>
+                <div class="regional-dual-label-tag regional-dual-label-show">Show Perspective</div>
+                <div class="regional-dual-chart-layer movie-layer"></div>
+                <div class="regional-dual-chart-layer show-layer"></div>
+                <div class="regional-dual-slider-handle"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -591,7 +673,8 @@
     <div class="genre-hook-outer" aria-hidden="false">
       <div class="genre-hook">
         <h2 class="genre-hook-title">
-          Let's see what is <span class="genre-hook-accent">#1 genre</span> content on Netflix
+          Let's see which <span class="genre-hook-accent">genre</span>
+           has the <span class="genre-hook-accent">largest library</span> on Netflix. 
         </h2>
       </div>
     </div>
@@ -604,16 +687,16 @@
         <div class="genre-reveal-narrative">
           <p class="genre-reveal-eyebrow">GENRE DOMINANCE</p>
           <h3 class="genre-reveal-headline">
-            Obviously, people love <span class="genre-headline-accent">Drama</span>
+            Netflix wants you to watch <span class="genre-headline-accent">Drama</span>
           </h3>
           <p class="genre-reveal-body">
             Across all <strong>18 genre categories</strong> on Netflix, Drama appears in nearly
-            <strong>1 of every 2 titles</strong> &mdash; far outpacing every rival on the platform.
+            <strong>1 of every 2 titles</strong>
           </p>
           <p class="genre-reveal-body genre-reveal-body--muted">
-            Comedy holds a distant second at 38%, then the curve dives sharply: Thriller and Action
+            Comedy holds a distant second at 38%, then the curve dives sharply: <br> Thriller and Action
             sit near 20%, while the long tail thins toward niche corners like War and Western at
-            under 3%.
+            under 3%.</br>
           </p>
         </div>
 
@@ -625,8 +708,7 @@
             aria-label="Vertical bar chart ranking all 18 Netflix genres by share of titles. Drama leads at 50%, followed by Comedy at 38%, with Western lowest at 2%."
           >
             <figcaption class="genre-bar-chart-head">
-              <p class="genre-bar-chart-eyebrow">CHART · NETFLIX LIBRARY (FULL TAXONOMY)</p>
-              <h4 class="genre-bar-chart-title">Genre Distribution Across All 18 Categories</h4>
+              <h4 class="genre-bar-chart-title">Netflix&apos;s Genre Ecosystem: What dominates the library?</h4>
               <p class="genre-bar-chart-sub">% of Total Distinct count of ID &middot; Ranked highest to lowest &middot; July 2022</p>
             </figcaption>
 
@@ -783,6 +865,10 @@
             </div>
 
             <p class="genre-bar-chart-axis-name">Genre &middot; ranked highest to lowest</p>
+
+            <p class="genre-bar-chart-footnote">
+              Note: Total percentages exceed 100% as individual titles are often categorized into multiple genres.
+            </p>
           </figure>
         </div>
 
@@ -823,77 +909,44 @@
         </p>
       </header>
 
-      <!-- Radio toggle controls -->
+      <!-- Radio toggle controls (default: Content Composition) -->
       <div class="explorer-controls" role="group" aria-label="Choose a view">
         <label class="explorer-pill">
           <input
             type="radio"
             name="explorer-view"
-            value="market-share"
+            value="content-composition"
             checked
-            aria-controls="view-market-share view-content-composition"
+            aria-controls="view-content-composition view-market-share"
           />
-          <span class="explorer-pill-label">Market Share of Production Countries per Genre</span>
+          <span class="explorer-pill-label">Content Composition by Country (% of National Library)</span>
         </label>
 
         <label class="explorer-pill">
           <input
             type="radio"
             name="explorer-view"
-            value="content-composition"
-            aria-controls="view-market-share view-content-composition"
+            value="market-share"
+            aria-controls="view-content-composition view-market-share"
           />
-          <span class="explorer-pill-label">Content Composition by Country (% of National Library)</span>
+          <span class="explorer-pill-label">Market Share of Production Countries per Genre</span>
         </label>
       </div>
 
       <!-- Dual-view container -->
       <div class="explorer-views">
 
-        <!-- VIEW A: Market Share — D3 small multiples (Global Content Dominance) -->
-        <div class="explorer-view is-active" id="view-market-share" role="region" aria-label="Market Share view">
-          <div class="explorer-view-inner explorer-view-inner--stacked">
-            <div class="explorer-view-copy" id="desc-market-share">
-              <span class="deepdive-block-tag">03 · MARKET SHARE</span>
-              <h3 class="deepdive-block-title">Global Content Dominance</h3>
-              <p class="deepdive-block-desc">
-                Market Share by Genre &amp; Country: Percentage of total production per genre.
-              </p>
-            </div>
-            <div class="explorer-chart-wrap explorer-chart-wrap--stacked">
-              <figure
-                class="market-share-viz market-share-viz--facets"
-                id="chart-market-share"
-                aria-label="Market share by genre and country: share of titles with valid IMDb scores among top producing countries"
-              >
-                <p class="market-share-facets__status" id="market-share-facets-status" role="status" aria-live="polite">
-                  Loading chart…
-                </p>
-                <div
-                  class="market-share-facets__container"
-                  id="market-share-facets-container"
-                  role="img"
-                  aria-hidden="true"
-                ></div>
-                <div
-                  class="market-share-facets__tooltip"
-                  id="market-share-facets-tooltip"
-                  role="tooltip"
-                  hidden
-                ></div>
-              </figure>
-            </div>
-          </div>
-        </div>
-
-        <!-- VIEW B: National Composition -->
-        <div class="explorer-view" id="view-content-composition" role="region" aria-label="National Composition view" hidden>
+        <!-- VIEW A (default): Content Composition — national library breakdown -->
+        <div class="explorer-view is-active" id="view-content-composition" role="region" aria-label="National Composition view">
           <div class="explorer-view-inner explorer-view-inner--stacked">
             <div class="explorer-view-copy" id="desc-content-composition">
-              <span class="deepdive-block-tag">04 · NATIONAL LIBRARY</span>
+              <span class="deepdive-block-tag">03 · NATIONAL LIBRARY</span>
               <h3 class="deepdive-block-title">Content Composition by Country</h3>
               <p class="deepdive-block-desc">
                 Every nation crafts its unique cinematic DNA. While some regions prioritize high-volume production of familiar staples, others lean into specialized expertise. Click a genre in the legend below to highlight its presence across the globe and see which nations dominate specific storytelling niches.
+              </p>
+              <p class="composition-chart-footnote">
+                <br> <span style="color: #E50914;"></span>Note:</span> Total percentages exceed 100% as individual titles are often categorized into multiple genres.
               </p>
             </div>
             <div class="explorer-chart-wrap explorer-chart-wrap--stacked">
@@ -959,8 +1012,45 @@
                   </span>
                 </div>
                 <div class="composition-chart__host" id="composition-stacked-host"></div>
+                
                 <div class="composition-chart__tooltip" id="composition-stacked-tooltip" role="tooltip" hidden></div>
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW B: Market Share — D3 small multiples (Global Content Dominance) -->
+        <div class="explorer-view" id="view-market-share" role="region" aria-label="Market Share view" hidden>
+          <div class="explorer-view-inner explorer-view-inner--stacked">
+            <div class="explorer-view-copy" id="desc-market-share">
+              <span class="deepdive-block-tag">04 · MARKET SHARE</span>
+              <h3 class="deepdive-block-title">Global Content Dominance</h3>
+              <p class="deepdive-block-desc">
+                Market Share by Genre &amp; Country: Percentage of total production per genre.
+              </p>
+            </div>
+            <div class="explorer-chart-wrap explorer-chart-wrap--stacked">
+              <figure
+                class="market-share-viz market-share-viz--facets"
+                id="chart-market-share"
+                aria-label="Market share by genre and country: share of titles with valid IMDb scores among top producing countries"
+              >
+                <p class="market-share-facets__status" id="market-share-facets-status" role="status" aria-live="polite">
+                  Loading chart…
+                </p>
+                <div
+                  class="market-share-facets__container"
+                  id="market-share-facets-container"
+                  role="img"
+                  aria-hidden="true"
+                ></div>
+                <div
+                  class="market-share-facets__tooltip"
+                  id="market-share-facets-tooltip"
+                  role="tooltip"
+                  hidden
+                ></div>
+              </figure>
             </div>
           </div>
         </div>
@@ -1003,15 +1093,15 @@
           </h3>
         </header>
 
-        <div class="tarot-heatmap-chart tarot-heatmap-chart--data" id="chart-regional-heatmap" aria-label="Average IMDb scores by region and genre">
+        <div class="tarot-heatmap-chart tarot-heatmap-chart--data" id="chart-regional-heatmap" aria-label="Median IMDb scores by region and genre">
           <header class="heatmap-header">
             <p class="heatmap-chart-name">Regional Genre Specialization</p>
             <div class="heatmap-legend" aria-hidden="true">
-              <span class="heatmap-legend-label">Avg. IMDb Score</span>
+              <span class="heatmap-legend-label">MEDIAN IMDB SCORE</span>
               <div class="heatmap-legend-scale">
                 <span class="heatmap-legend-min">4.5</span>
                 <span class="heatmap-legend-bar"></span>
-                <span class="heatmap-legend-max">7.8</span>
+                <span class="heatmap-legend-max">8.5</span>
               </div>
             </div>
           </header>
@@ -1019,7 +1109,7 @@
           <div class="heatmap-table-wrap">
             <table class="heatmap-table" id="heatmap-table">
               <caption class="visually-hidden">
-                Average IMDb score for each genre, broken down by country of origin.
+                Median IMDb score for each genre, broken down by country of origin.
                 Cell color intensity reflects the score, with brighter Netflix red
                 indicating higher critical acclaim. A trophy badge marks the top-rated
                 country for each genre.
@@ -1044,7 +1134,7 @@
         </div>
 
         <p class="tarot-heatmap-caption">
-          <strong>Reading this chart:</strong> This heatmap benchmarks quality by displaying Average IMDb Scores across regions. While some nations dominate in volume, this view highlights where the "Critical Excellence" truly lies — the trophy <span aria-hidden="true">🏆</span> marks the top country for each genre.
+          <strong>Reading this chart:</strong> This heatmap benchmarks quality by displaying median IMDb scores across regions. While some nations dominate in volume, this view highlights where the "Critical Excellence" truly lies — the trophy <span aria-hidden="true">🏆</span> marks the top country for each genre.
         </p>
 
       </div><!-- /#regional-scores-heatmap -->
