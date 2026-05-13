@@ -1428,10 +1428,16 @@
       const back = document.createElement('div');
       back.className = 'flip-card-face flip-card-back';
       back.innerHTML = `
-        <span class="flip-card-flag" aria-hidden="true">${item.flag}</span>
-        <span class="flip-card-country">${item.country}</span>
-        <span class="flip-card-score-label">Median IMDb</span>
-        <span class="flip-card-score">${item.score.toFixed(2)}</span>
+        <div class="flip-card-back-header">
+          <span class="flip-card-back-meta-line">${item.country} • ${item.genre}</span>
+        </div>
+        <div class="flip-card-back-flag-wrap">
+          <span class="flip-card-back-flag" aria-hidden="true">${item.flag}</span>
+        </div>
+        <div class="flip-card-back-score">
+          <span class="flip-card-score-label">Median IMDb score</span>
+          <span class="flip-card-score">${item.score.toFixed(2)}</span>
+        </div>
       `;
 
       inner.appendChild(front);
